@@ -31,7 +31,7 @@ arbolesADT newlist(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
-TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
+static TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
     TBarrios * aux = malloc(sizeof(struct TBarrios));
     if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
@@ -49,7 +49,7 @@ TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
 }
 
 static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_hab) {
-    int comp, comp2;
+    long int comp, comp2;
     if(first == NULL || (comp = cant_hab - first->cant_habitantes) > 0 || (comp == 0 && (comp2=strcmp(nombre, first->nombre)) > 0)) {
         TBarrios * aux = creaNodoBarrio(nombre, cant_hab);
         if(aux == NULL){
@@ -59,7 +59,7 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int c
         aux->next = first;
         return aux;
     }
-    if (comp == 0 && c < 0){
+    if (comp == 0 && comp2 < 0){
         TBarrios * aux2 = creaNodoBarrio(nombre, cant_hab);
         if(aux2 == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
@@ -80,7 +80,7 @@ void addBarrio(arbolesADT arboles, const char * nombre, long int cant_hab){
     arboles->firstBarrio = addBarrioRec(arboles->firstBarrio, nombre, cant_hab);
 }
 
-TArboles * creaNodoArbol(const char * nombre, int diametro){
+static TArboles * creaNodoArbol(const char * nombre, long int diametro){
     TArboles * aux = malloc(sizeof(TArboles));
     if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
@@ -98,7 +98,7 @@ TArboles * creaNodoArbol(const char * nombre, int diametro){
     return aux;
 }
 
-TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
+static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
   if(first == NULL){
     first = nodoAUbicar;
     return first;
@@ -127,7 +127,7 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
   return first;
 }
 
-TArboles * addArbolRec(TArboles * first, const char * nombre, long int diametro, TArboles * nodoAUbicar){
+static TArboles * addArbolRec(TArboles * first, const char * nombre, long int diametro, TArboles * nodoAUbicar){
   if(first == NULL){
     nodoAUbicar = creaNodoArbol(nombre, diametro);
     return first;
@@ -146,7 +146,7 @@ TArboles * addArbolRec(TArboles * first, const char * nombre, long int diametro,
 }
 
 
-static void incArboles (TBarrios * first, char * nombre){
+static void incArboles (TBarrios * first, const char * nombre){
     if (first != NULL){
         if (strcmp(first->nombre, nombre) == 0){
             first->cant_arboles++;
@@ -178,7 +178,7 @@ int hasNextArbol(arbolesADT arboles){
     return arboles->currentArbol != NULL;
 }
 
-char * nombreBarrio(arbolesADT barrios){
+char * nextNombreBarrio(arbolesADT barrios){
   if(barrios == NULL || !hasNextBarrio(barrios)){
     return NULL;
   }
@@ -193,7 +193,7 @@ char * nombreBarrio(arbolesADT barrios){
 
 long int nextCantArb(arbolesADT barrios){
   if(barrios == NULL || !hasNextBarrio(barrios)){
-    return NULL;
+    return 0; //sino que retorno?
   }
   int aux = barrios->currentBarrio->cant_arboles;
   barrios->currentBarrio = barrios->currentBarrio->next;
@@ -202,7 +202,7 @@ long int nextCantArb(arbolesADT barrios){
 
 float nextCantPromedioArboles(arbolesADT arboles){
   if(arboles == NULL || !hasNextArbol(arboles)){
-    return NULL;
+    return 0;
   }
   float aux = arboles->currentArbol->arbol_habitante_promedio;
   arboles->currentArbol = arboles->currentArbol->next;
@@ -224,7 +224,7 @@ char * nombreArbol (arbolesADT arboles){
 
 float nextDiametro (arbolesADT arboles){
     if (arboles == NULL || !hasNextArbol(arboles)){
-        return NULL;
+        return 0;
     }
     float aux = arboles->currentArbol->diametro_promedio;
     arboles->currentArbol = arboles->currentArbol->next;
