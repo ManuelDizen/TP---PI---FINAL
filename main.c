@@ -42,9 +42,8 @@ int main(int argc, char *argv[]) {
     }
 
     //Leo archivo de arboles
-    char line2[MAX_LEN];
-    fgets(line2, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
-    while(fgets(line2, MAX_LEN, fileArboles)!=NULL){
+    fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
+    while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token, comuna, nombre;
         int index = 0;
         int diametro;
@@ -85,19 +84,19 @@ int main(int argc, char *argv[]) {
 
     toBeginBarrio(barrios);
     while ( hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%d\n", nombreBarrio(barrios), nextCantArb(barrios));
+        fprintf(q1, "%s;%d\n", nextNombreBarrio(barrios), nextCantArb(barrios));
     }
 
     sortByAverage(barrios); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
 
     toBeginBarrio(barrios);
     while(hasNextBarrio(barrios)){
-      fprintf(q2, "%s;0.2%f\n", nombreBarrio(barrios), nextCantPromedioArboles(barrios));
+      fprintf(q2, "%s;0.2%f\n", nextNombreBarrio(barrios), nextCantPromedioArboles(barrios));
     }
 
     toBeginArbol(barrios);
     while ( hasNextArbol(barrios)) {
-        fprintf(q3, "%s;%d\n", nombreArbol(barrios), nextDiametro(barrios));
+        fprintf(q3, "%s;%d\n", nextNombreArbol(barrios), nextDiametro(barrios));
     }
 
     fclose(fileArboles);
