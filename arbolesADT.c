@@ -1,5 +1,5 @@
 
-#include "pruebaarbolesADT.h"
+#include "arbolesADT.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,8 +50,8 @@ TBarrios * creaNodoBarrio(const char * name, long int cant){
 }
 
 static TBarrios * addBarrioRec(TBarrios * first, const char * name, long int cant) {
-    int comp;
-    if(first == NULL || (comp = cant - first->cant_habitantes) > 0 || (comp == 0 && (c=strcmp(name, first->nombre)) > 0) {
+    int comp, c;
+    if(first == NULL || (comp = cant - first->cant_habitantes) > 0 || (comp == 0 && (c=strcmp(name, first->nombre)) > 0)) {
         TBarrios * aux = creaNodoBarrio(name, cant);
         if(aux == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
@@ -66,11 +66,11 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * name, long int can
           fprintf(stderr, "There's not enough memory available for allocation");
           return first;
         }
-        aux2->tail = first->tail;
-        first->tail = aux2;
+        aux2->next = first->next;
+        first->next = aux2;
         return aux2;
     }
-    first->next = addBarrioRec(first->next, barrio);
+    first->next = addBarrioRec(first->next, name, cant);
     return first;
 }
 
@@ -82,7 +82,7 @@ void addBarrio(arbolesADT arboles, const char * name, long int cant){
 }
 
 TArboles * creaNodoArbol(const char * nombre, int diametro){
-    TArbol * aux = malloc(sizeof(TArboles));
+    TArboles * aux = malloc(sizeof(TArboles));
     if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
@@ -107,7 +107,7 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
   int c;
   if((c = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0){
     nodoAUbicar->next = first;
-    first = first->tail;
+    first = first->next;
     return nodoAUbicar;
   }
   if(c == 0){
@@ -139,7 +139,7 @@ TArboles * addArbolRec(TArboles * first, const char * nombre, int diametro, TArb
     nodoAUbicar = first;
     return first;
   }
-  first->next=addArbolRec(first->next, arbol, nombre, diametro);
+  first->next=addArbolRec(first->next, nombre, diametro, nodoAUbicar);
   return first;
 }
 
