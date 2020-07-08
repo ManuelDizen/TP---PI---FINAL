@@ -107,14 +107,15 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
   int c;
   if((c = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0){
     nodoAUbicar->next = first;
-    first = first->next;
-    return nodoAUbicar;
+    first = nodoAUbicar;
+    return first;
   }
   if(c == 0){
     int d;
     if((d = strcmp(first->nombre, nodoAUbicar->nombre)) < 0){
       nodoAUbicar->next = first;
-      return nodoAUbicar;
+      first = nodoAUbicar;
+      return first;
     }
     if(d == 0){
       return first;
@@ -129,14 +130,14 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
 
 TArboles * addArbolRec(TArboles * first, const char * nombre, int diametro, TArboles * nodoAUbicar){
   if(first == NULL){
-    first = creaNodoArbol(nombre, diametro);
-    nodoAUbicar = first;
+    nodoAUbicar = creaNodoArbol(nombre, diametro);
     return first;
   }
   int c;
   if((c = strcmp(first->nombre, nombre)) == 0){
     first->diametro_promedio = ((first->diametro_total += diametro) / (first->cantidad_arboles++));
     nodoAUbicar = first;
+    first = first->tail;
     return first;
   }
   first->next=addArbolRec(first->next, nombre, diametro, nodoAUbicar);
