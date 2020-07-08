@@ -42,9 +42,8 @@ int main(int argc, char *argv[]) {
     }
 
     //Leo archivo de arboles
-    char line2[MAX_LEN];
-    fgets(line2, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
-    while(fgets(line2, MAX_LEN, fileArboles)!=NULL){
+    fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
+    while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token, comuna, nombre;
         int index = 0;
         int diametro;
