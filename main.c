@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
-        char * nombre = malloc(strlen(token));
+        char * nombre = malloc(strlen(token)+1);
         if (nombre == NULL){
             fprintf(stderr, "There's not enough memory available for allocation");
             return 1;
@@ -44,13 +44,15 @@ int main(int argc, char *argv[]) {
     //Leo archivo de arboles
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
-        char * token, comuna, nombre;
+        char * token;
+        char * comuna;
+        char * nombre;
         int index = 0;
         int diametro;
-        for (token = strtok (texto, ";"); token != NULL; token = strtok (NULL, ";"))
+        for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
             if (index == 2){
-                comuna = malloc(strlen(token));
+                comuna = malloc(strlen(token)+1);
                 if (comuna == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
                     return 1;
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]) {
                 strcpy(comuna, token);
             }
             else if (index == 7){
-                nombre = malloc(strlen(token));
+                nombre = malloc(strlen(token)+1);
                 if (nombre == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
                     return 1;
@@ -84,19 +86,19 @@ int main(int argc, char *argv[]) {
 
     toBeginBarrio(barrios);
     while ( hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%d\n", nextNombreBarrio(barrios), nextCantArb(barrios));
+        fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
     }
 
     sortByAverage(barrios); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
 
     toBeginBarrio(barrios);
     while(hasNextBarrio(barrios)){
-      fprintf(q2, "%s;0.2%f\n", nextNombreBarrio(barrios), nextCantPromedioArboles(barrios));
+      fprintf(q2, "%s;%.2f\n", nextNombreBarrio(barrios), nextPromedioArbHab(barrios));
     }
 
     toBeginArbol(barrios);
     while ( hasNextArbol(barrios)) {
-        fprintf(q3, "%s;%d\n", nextNombreArbol(barrios), nextDiametro(barrios));
+        fprintf(q3, "%s;%.2f\n", nextNombreArbol(barrios), nextDiametro(barrios));
     }
 
     fclose(fileArboles);
