@@ -1,6 +1,6 @@
 
-#ifndef pruebaarbolesADT_h
-#define pruebaarbolesADT_h
+#ifndef arbolesADT_h
+#define arbolesADT_h
 
 #include <stdio.h>
 
@@ -8,7 +8,7 @@ typedef struct arbolesCDT * arbolesADT;
 
 arbolesADT newlist(void);
 
-void addBarrio(arbolesADT barrios, char * nombre, int habitantes);
+void addBarrio(arbolesADT arboles, const char * name, long int cant);
 void addArbol(arbolesADT arboles, char * comuna, char * nombre, int diametro);
 
 void toBeginBarrio (arbolesADT barrios);
