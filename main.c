@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     arbolesADT barrios = newlist();
     //Leo archivo de barrios
     char line[MAX_LEN];
-    fgets(line, MAX_LEN, fileBarrios) //evito la primer linea de encabezado
+    fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     }
 
     //para primer query funciona el orden, para segundo hay que hacer un BUBBLE
-    
+
 
     toBeginBarrio(barrios);
     while ( hasNextBarrio(barrios)) {
