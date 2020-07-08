@@ -18,8 +18,8 @@ int hasNextBarrio(arbolesADT barrios);
 int hasNextArbol(arbolesADT arboles);
 
 char * nextNombreBarrio (arbolesADT barrios);
-long int nextArbBarrio (arbolesADT barrios);
-long int nextArbHabitante (arbolesADT barrios);
+long int nextCantArb (arbolesADT barrios);
+long int nextPromedioArbHab(arbolesADT barrios);
 char * nextNombreArbol (arbolesADT arboles);
 long int nextDiametro (arbolesADT arboles);
 
