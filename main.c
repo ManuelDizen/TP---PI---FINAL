@@ -85,23 +85,19 @@ int main(int argc, char *argv[]) {
 
     toBeginBarrio(barrios);
     while ( hasNextBarrio(barrios)) {
-        fprintf("%s;", NombreBarrio(barrios));
-        fprintf("%d\n", nextCantArb(barrios));
+        fprintf(q1, "%s;%d\n", nombreBarrio(barrios), nextCantArb(barrios));
     }
 
-    //para primer query funciona el orden, para segundo hay que hacer un BUBBLE
-
+    sortByAverage(barrios); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
 
     toBeginBarrio(barrios);
-    while ( hasNextBarrio(barrios)) {
-        fprintf("%s;", NombreBarrio(barrios));
-        fprintf("%d\n", nextArbHabitante(barrios));
+    while(hasNextBarrio(barrios)){
+      fprintf(q2, "%s;0.2%f\n", nombreBarrio(barrios), nextCantPromedioArboles(barrios));
     }
 
     toBeginArbol(barrios);
     while ( hasNextArbol(barrios)) {
-        fprintf("%s;", NombreArbol(barrios));
-        fprintf("%d\n", nextDiametro(barrios));
+        fprintf(q3, "%s;%d\n", nombreArbol(barrios), nextDiametro(barrios));
     }
 
     fclose(fileArboles);

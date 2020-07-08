@@ -175,43 +175,54 @@ int hasNextArbol(arbolesADT arboles){
     return arboles->currentArbol != NULL;
 }
 
-char * nextNombreBarrio (arbolesADT barrios) {
-    if ( ! hasNextBarrio(barrios))
+char * nombreBarrio(arbolesADT barrios){
+  if(!hasNextBarrio(barrios)){
+    return NULL;
+  }
+  char * aux = malloc(strlen(barrios->currentBarrio->nombre));
+  if(aux == NULL){
+    fprintf(stderr, "Not enough memory");
+    return NULL;
+  }
+  strcpy(aux, barrios->currentBarrio->nombre);
+  return aux;
+}
+
+int nextCantArb(arbolesADT barrios){
+  if(!hasNextBarrio(barrios)){
+    return NULL;
+  }
+  int aux = barrios->currentBarrio->cant_arboles;
+  barrios->currentBarrio = barrios->currentBarrio->next;
+  return aux;
+}
+
+float nextCantPromedioArboles(arbolesADT arboles){
+  if(arboles == NULL){
+    return NULL;
+  }
+  float aux = arboles->currentArbol->arbol_habitante_promedio;
+  arboles->currentArbol = arboles->currentArbol->next;
+  return aux;
+}
+
+char * nombreArbol (arbolesADT arboles){
+    if ( ! hasNextArbol(arboles)){
         return NULL;
-    char * aux = malloc(strlen(barrios->currentBarrio->nombre));
-    strcpy(aux, barrios->currentBarrio->nombre);
-    barrios->currentBarrio = barrios->currentBarrio->next;
-    return aux;
-}
-
-long int nextArbBarrio (arbolesADT barrios){
-    if ( ! hasNextBarrio(barrios))
-        return NULL;
-    long int aux = barrios->currentBarrio->cant_arboles;
-    barrios->currentBarrio = barrios->currentBarrio->next;
-    return aux;
-}
-
-long int nextArbHabitante (arbolesADT barrios){
-    if ( ! hasNextBarrio(barrios))
-        exit(1);
-    long int aux = barrios->currentBarrio->arbol_habitante_promedio;
-    barrios->currentBarrio = barrios->currentBarrio->next;
-    return aux;
-}
-
-char * nextNombreArbol (arbolesADT arboles){
-    if ( ! hasNextArbol(arboles))
-        exit(1);
+    }
     char * aux = malloc(strlen(arboles->currentArbol->nombre));
+    if(aux == NULL){
+      fprintf(stderr, "Not enough memory");
+      return NULL;
+    }
     strcpy(aux, arboles->currentArbol->nombre);
-    arboles->currentArbol = arboles->currentArbol->next;
     return aux;
 }
 
 long int nextDiametro (arbolesADT arboles){
-    if ( ! hasNextArbol(arboles))
-        exit(1);
+    if ( ! hasNextArbol(arboles)){
+        return NULL;
+    }
     long int aux = arboles->currentArbol->diametro_promedio;
     arboles->currentArbol = arboles->currentArbol->next;
     return aux;
