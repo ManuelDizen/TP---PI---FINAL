@@ -8,7 +8,7 @@ typedef struct TArboles {
     char * nombre;
     long int cantidad_arboles;
     long int diametro_total;
-    long int diametro_promedio;
+    float diametro_promedio;
     struct TArboles * next;
 } TArboles;
 
@@ -16,7 +16,7 @@ typedef struct TBarrios{
     char * nombre;
     long int cant_arboles;
     long int cant_habitantes;
-    long int arbol_habitante_promedio;
+    float arbol_habitante_promedio;
     struct TBarrios * next;
 } TBarrios;
 
@@ -31,28 +31,27 @@ arbolesADT newlist(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
-TBarrios * creaNodoBarrio(const char * name, long int cant){
+TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
     TBarrios * aux = malloc(sizeof(struct TBarrios));
     if(aux == NULL){
-      free(aux);
+      fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
     }
-    aux->nombre = malloc(strlen(name));
+    aux->nombre = malloc(strlen(nombre)+1);
     if(aux->nombre == NULL){
-      free(aux->nombre);
-      free(aux);
+      fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
     }
-    strcpy(aux->nombre, name);
-    aux->cant_arboles = cant;
-    aux->cant_habitantes = aux->arbol_habitante_promedio = 0;
+    strcpy(aux->nombre, nombre);
+    aux->cant_habitantes = cant_hab;
+    aux->cant_arboles = aux->arbol_habitante_promedio = 0;
     return aux;
 }
 
-static TBarrios * addBarrioRec(TBarrios * first, const char * name, long int cant) {
-    int comp, c;
-    if(first == NULL || (comp = cant - first->cant_habitantes) > 0 || (comp == 0 && (c=strcmp(name, first->nombre)) > 0)) {
-        TBarrios * aux = creaNodoBarrio(name, cant);
+static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_hab) {
+    int comp, comp2;
+    if(first == NULL || (comp = cant_hab - first->cant_habitantes) > 0 || (comp == 0 && (comp2=strcmp(nombre, first->nombre)) > 0)) {
+        TBarrios * aux = creaNodoBarrio(nombre, cant_hab);
         if(aux == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
           return first;
@@ -61,7 +60,7 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * name, long int can
         return aux;
     }
     if (comp == 0 && c < 0){
-        TBarrios * aux2 = creaNodoBarrio(name, cant);
+        TBarrios * aux2 = creaNodoBarrio(nombre, cant_hab);
         if(aux2 == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
           return first;
@@ -70,15 +69,15 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * name, long int can
         first->next = aux2;
         return aux2;
     }
-    first->next = addBarrioRec(first->next, name, cant);
+    first->next = addBarrioRec(first->next, nombre, cant_hab);
     return first;
 }
 
-void addBarrio(arbolesADT arboles, const char * name, long int cant){
+void addBarrio(arbolesADT arboles, const char * nombre, long int cant_hab){
     if(arboles == NULL){
       return;
     }
-    arboles->firstBarrio = addBarrioRec(arboles->firstBarrio, name, cant);
+    arboles->firstBarrio = addBarrioRec(arboles->firstBarrio, nombre, cant_hab);
 }
 
 TArboles * creaNodoArbol(const char * nombre, int diametro){
@@ -87,7 +86,7 @@ TArboles * creaNodoArbol(const char * nombre, int diametro){
       fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
     }
-    aux->nombre = malloc(strlen(nombre));
+    aux->nombre = malloc(strlen(nombre)+1);
     if (aux->nombre == NULL){
         fprintf(stderr, "There's not enough memory available for allocation");
         return NULL;
@@ -104,20 +103,20 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
     first = nodoAUbicar;
     return first;
   }
-  int c;
-  if((c = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0){
+  int comp;
+  if((comp = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0){
     nodoAUbicar->next = first;
     first = nodoAUbicar;
     return first;
   }
-  if(c == 0){
-    int d;
-    if((d = strcmp(first->nombre, nodoAUbicar->nombre)) < 0){
+  if(comp == 0){
+    int comp2;
+    if((comp2 = strcmp(first->nombre, nodoAUbicar->nombre)) < 0){
       nodoAUbicar->next = first;
       first = nodoAUbicar;
       return first;
     }
-    if(d == 0){
+    if(comp2 == 0){
       return first;
     }
     nodoAUbicar->next = first->next;
@@ -128,14 +127,16 @@ TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
   return first;
 }
 
-TArboles * addArbolRec(TArboles * first, const char * nombre, int diametro, TArboles * nodoAUbicar){
+TArboles * addArbolRec(TArboles * first, const char * nombre, long int diametro, TArboles * nodoAUbicar){
   if(first == NULL){
     nodoAUbicar = creaNodoArbol(nombre, diametro);
     return first;
   }
-  int c;
-  if((c = strcmp(first->nombre, nombre)) == 0){
-    first->diametro_promedio = ((first->diametro_total += diametro) / (first->cantidad_arboles++));
+  int comp;
+  if((comp = strcmp(first->nombre, nombre)) == 0){
+    first->cantidad_arboles++;
+    first->diametro_total += diametro;
+    first->diametro_promedio = (first->diametro_total / first->cantidad_arboles);
     nodoAUbicar = first;
     first = first->tail;
     return first;
@@ -148,14 +149,15 @@ TArboles * addArbolRec(TArboles * first, const char * nombre, int diametro, TArb
 static void incArboles (TBarrios * first, char * nombre){
     if (first != NULL){
         if (strcmp(first->nombre, nombre) == 0){
-            first->arbol_habitante_promedio = ((first->cant_arboles++) / first->cant_habitantes);
+            first->cant_arboles++;
+            first->arbol_habitante_promedio = (first->cant_arboles / first->cant_habitantes);
             return;
         }
         incArboles(first->next, nombre);
     }
 }
 
-void addArbol(arbolesADT arboles, char * comuna, char * nombre, int diametro){
+void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     TArboles * nodoAUbicar = NULL;
     arboles->firstArbol = addArbolRec(arboles->firstArbol, nombre, diametro, nodoAUbicar);
     arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar);
@@ -177,20 +179,20 @@ int hasNextArbol(arbolesADT arboles){
 }
 
 char * nombreBarrio(arbolesADT barrios){
-  if(!hasNextBarrio(barrios)){
+  if(barrios == NULL || !hasNextBarrio(barrios)){
     return NULL;
   }
-  char * aux = malloc(strlen(barrios->currentBarrio->nombre));
+  char * aux = malloc(strlen(barrios->currentBarrio->nombre)+1);
   if(aux == NULL){
-    fprintf(stderr, "Not enough memory");
+    fprintf(stderr, "There's not enough memory available for allocation");
     return NULL;
   }
   strcpy(aux, barrios->currentBarrio->nombre);
   return aux;
 }
 
-int nextCantArb(arbolesADT barrios){
-  if(!hasNextBarrio(barrios)){
+long int nextCantArb(arbolesADT barrios){
+  if(barrios == NULL || !hasNextBarrio(barrios)){
     return NULL;
   }
   int aux = barrios->currentBarrio->cant_arboles;
@@ -199,7 +201,7 @@ int nextCantArb(arbolesADT barrios){
 }
 
 float nextCantPromedioArboles(arbolesADT arboles){
-  if(arboles == NULL){
+  if(arboles == NULL || !hasNextArbol(arboles)){
     return NULL;
   }
   float aux = arboles->currentArbol->arbol_habitante_promedio;
@@ -208,23 +210,23 @@ float nextCantPromedioArboles(arbolesADT arboles){
 }
 
 char * nombreArbol (arbolesADT arboles){
-    if ( ! hasNextArbol(arboles)){
+    if (arboles == NULL ||  !hasNextArbol(arboles)){
         return NULL;
     }
-    char * aux = malloc(strlen(arboles->currentArbol->nombre));
+    char * aux = malloc(strlen(arboles->currentArbol->nombre)+1);
     if(aux == NULL){
-      fprintf(stderr, "Not enough memory");
+      fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
     }
     strcpy(aux, arboles->currentArbol->nombre);
     return aux;
 }
 
-long int nextDiametro (arbolesADT arboles){
-    if ( ! hasNextArbol(arboles)){
+float nextDiametro (arbolesADT arboles){
+    if (arboles == NULL || !hasNextArbol(arboles)){
         return NULL;
     }
-    long int aux = arboles->currentArbol->diametro_promedio;
+    float aux = arboles->currentArbol->diametro_promedio;
     arboles->currentArbol = arboles->currentArbol->next;
     return aux;
 }
