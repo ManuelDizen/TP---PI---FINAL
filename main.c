@@ -1,20 +1,20 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "pruebaarbolesADT.h"
+#include "arbolesADT.h"
 
 #define MAX_LEN 2048
 
 int main(int argc, char *argv[]) {
-
+/*
     if (argc != 3) {
       fprintf(stderr, "Invalid number of arguments\n");
       return 1;
     }
+ */
 
-    FILE * fileArboles = fopen(argv[1], "r");
-    FILE * fileBarrios = fopen(argv[2], "r");
+    FILE * fileArboles = fopen("/Users/milu/Downloads/arbolesBUE.csv", "r");
+    FILE * fileBarrios = fopen("/Users/milu/Downloads/barriosBUE.csv", "r");
     FILE *q1, *q2, *q3;
 
     if(fileBarrios == NULL || fileArboles == NULL)
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    arbolesADT arboles = newlist();
+    arbolesADT arboles = newVector();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -75,37 +75,34 @@ int main(int argc, char *argv[]) {
         addArbol(arboles, comuna, nombre, diametro);
      }
 
+    
     //Abro archivos de query para escribirlos
-    q1 = fopen("query1.csv", "w");
+    q1 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query1.csv", "w");
     fprintf(q1, "BARRIO;ARBOLES\n");
-    q2 = fopen("query2.csv", "w");
+    q2 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query2.csv", "w");
     fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
-    q3 = fopen("query3.csv", "w");
+    q3 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query3.csv", "w");
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
 
-
-    toBeginBarrio(arboles);
-    while ( hasNextBarrio(arboles)) {
-        fprintf(q1, "%s;%li\n", nextNombreBarrio(arboles), nextCantArb(arboles));
+    sortCantArb(arboles);
+    for (size_t i = 0; i < sizeBarrio(arboles); i++){
+        fprintf(q1, "%s;%li\n", nombreBarrio(arboles, i), cantArb(arboles, i));
     }
 
-    sortByAverage(arboles); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
-
-    toBeginBarrio(arboles);
-    while(hasNextBarrio(arboles)){
-      fprintf(q2, "%s;%.2lf\n", nextNombreBarrio(arboles), nextPromedioArbHab(arboles));
+    sortArbHab(arboles);
+    for (size_t i = 0; i < sizeBarrio(arboles); i++){
+        fprintf(q2, "%s;%.2f\n", nombreBarrio(arboles, i), promedioArbHab(arboles, i));
     }
 
-    toBeginArbol(arboles);
-    while ( hasNextArbol(arboles)) {
-        fprintf(q3, "%s;%.2lf\n", nextNombreArbol(arboles), nextDiametro(arboles));
+    sortDiam(arboles);
+    for (size_t i = 0; i < sizeArboles(arboles); i++){
+        fprintf(q3, "%s;%.2f\n", nombreArbol(arboles, i), promedioDiam(arboles, i));
     }
-
-    freeAll(arboles);
 
     fclose(fileArboles);
     fclose(fileBarrios);
     fclose(q1);
     fclose(q2);
     fclose(q3);
+    freeVector(arboles);
 }

@@ -1,28 +1,28 @@
 
-#ifndef arbolesADT_h
-#define arbolesADT_h
+#ifndef pruebaarbolesADT_h
+#define pruebaarbolesADT_h
 
 #include <stdio.h>
 
 typedef struct arbolesCDT * arbolesADT;
 
-arbolesADT newlist(void);
+arbolesADT newVector(void);
+//Agrega un barrio nuevo a la lista. Si ya existe, no hace nada
+void addBarrio (arbolesADT arboles, char * nombre, long int cant_hab);
+void addArbol (arbolesADT arboles, char * barrio, char * nombre, long int diametro);
 
-void addBarrio(arbolesADT arboles, const char * name, long int cant);
-void addArbol(arbolesADT arboles, char * comuna, char * nombre, long int diametro);
+size_t sizeBarrio (arbolesADT arboles);
+size_t sizeArboles (arbolesADT arboles);
+char * nombreBarrio (arbolesADT arboles, size_t index);
+long int cantArb (arbolesADT arboles, size_t index);
+double promedioArbHab (arbolesADT arboles, size_t index);
+char * nombreArbol (arbolesADT arboles, size_t index);
+double promedioDiam (arbolesADT arboles, size_t index);
 
-void toBeginBarrio (arbolesADT barrios);
-void toBeginArbol (arbolesADT arboles);
+void freeVector(arbolesADT arboles);
 
-int hasNextBarrio(arbolesADT barrios);
-int hasNextArbol(arbolesADT arboles);
-
-char * nextNombreBarrio (arbolesADT barrios);
-long int nextCantArb (arbolesADT barrios);
-float nextCantPromedioArboles(arbolesADT barrios);
-char * nombreArbol(arbolesADT barrios);
-float nextDiametro (arbolesADT arboles);
-
-void freeAll(arbolesADT arboles);
+void sortCantArb (arbolesADT arboles);
+void sortArbHab (arbolesADT arboles);
+void sortDiam (arbolesADT arboles);
 
 #endif /* pruebaarbolesADT_h */
