@@ -29,17 +29,16 @@ size_t sizeBarrio (barriosADT barrios){
 }
 
 
-
 static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_hab, int * ok) {
-    if(first == NULL ||strcmp(first->nombre, nombre) > 0){
+    if(first == NULL||strcmp(first->nombre, nombre) > 0){
         TBarrios * aux = malloc(sizeof(struct TBarrios));
         if(aux == NULL){
-          fprintf(stderr, "There's not enough memory available for allocation");
-          return NULL;
+            fprintf(stderr, "There's not enough memory for allocation");
+            return NULL;
         }
         aux->nombre = malloc(strlen(nombre)+1);
         if(aux->nombre == NULL){
-            fprintf(stderr, "There's not enough memory available for allocation");
+            fprintf(stderr, "There's not enough memory for allocation");
             return NULL;
         }
         strcpy(aux->nombre, nombre);
@@ -49,8 +48,9 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int c
         *ok = 1;
         return aux;
     }
-    if(strcmp(first->nombre, nombre)< 0)
+    if(strcmp(first->nombre, nombre)!=0){
         first->next = addBarrioRec(first->next, nombre, cant_hab, ok);
+    }
     return first;
 }
 
