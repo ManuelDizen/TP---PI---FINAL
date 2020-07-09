@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    arbolesADT barrios = newlist();
+    arbolesADT arboles = newlist();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         strcpy(nombre,token);
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
-        addBarrio(barrios, nombre, habitantes);
+        addBarrio(arboles, nombre, habitantes);
     }
 
     //Leo archivo de arboles
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
             }
             index++;
         }
-        addArbol(barrios, comuna, nombre, diametro);
+        addArbol(arboles, comuna, nombre, diametro);
      }
 
     //Abro archivos de query para escribirlos
@@ -84,22 +84,24 @@ int main(int argc, char *argv[]) {
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
 
 
-    toBeginBarrio(barrios);
-    while ( hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
+    toBeginBarrio(arboles);
+    while ( hasNextBarrio(arboles)) {
+        fprintf(q1, "%s;%li\n", nextNombreBarrio(arboles), nextCantArb(arboles));
     }
 
-    sortByAverage(barrios); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
+    sortByAverage(arboles); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
 
-    toBeginBarrio(barrios);
-    while(hasNextBarrio(barrios)){
-      fprintf(q2, "%s;%.2f\n", nextNombreBarrio(barrios), nextPromedioArbHab(barrios));
+    toBeginBarrio(arboles);
+    while(hasNextBarrio(arboles)){
+      fprintf(q2, "%s;%.2lf\n", nextNombreBarrio(arboles), nextPromedioArbHab(arboles));
     }
 
-    toBeginArbol(barrios);
-    while ( hasNextArbol(barrios)) {
-        fprintf(q3, "%s;%.2f\n", nextNombreArbol(barrios), nextDiametro(barrios));
+    toBeginArbol(arboles);
+    while ( hasNextArbol(arboles)) {
+        fprintf(q3, "%s;%.2lf\n", nextNombreArbol(arboles), nextDiametro(arboles));
     }
+
+    freeAll(arboles);
 
     fclose(fileArboles);
     fclose(fileBarrios);

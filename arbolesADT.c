@@ -8,7 +8,7 @@ typedef struct TArboles {
     char * nombre;
     long int cantidad_arboles;
     long int diametro_total;
-    float diametro_promedio;
+    double diametro_promedio;
     struct TArboles * next;
 } TArboles;
 
@@ -16,7 +16,7 @@ typedef struct TBarrios{
     char * nombre;
     long int cant_arboles;
     long int cant_habitantes;
-    float arbol_habitante_promedio;
+    double arbol_habitante_promedio;
     struct TBarrios * next;
 } TBarrios;
 
@@ -67,7 +67,7 @@ static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int c
         }
         aux2->next = first->next;
         first->next = aux2;
-        return aux2;
+        return first;
     }
     first->next = addBarrioRec(first->next, nombre, cant_hab);
     return first;
@@ -103,24 +103,18 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
     first = nodoAUbicar;
     return first;
   }
-  int comp;
-  if((comp = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0){
+  double comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio;
+  int comp2 = strcmp(first->nombre, nodoAUbicar->nombre));
+  if(comp1 < 0 || (comp1 == 0 && comp2 < 0) ){
     nodoAUbicar->next = first;
     first = nodoAUbicar;
     return first;
   }
-  if(comp == 0){
-    int comp2;
-    if((comp2 = strcmp(first->nombre, nodoAUbicar->nombre)) < 0){
-      nodoAUbicar->next = first;
-      first = nodoAUbicar;
-      return first;
+  if(comp1 == 0){
+    if(comp2 > 0){
+      nodoAUbicar->next = first->next;
+      first->next = nodoAUbicar;
     }
-    if(comp2 == 0){
-      return first;
-    }
-    nodoAUbicar->next = first->next;
-    first->next = nodoAUbicar;
     return first;
   }
   first->next = ubicaPorDiam(first->next, nodoAUbicar);
@@ -134,9 +128,7 @@ static TArboles * addArbolRec(TArboles * first, const char * nombre, long int di
   }
   int comp;
   if((comp = strcmp(first->nombre, nombre)) == 0){
-    first->cantidad_arboles++;
-    first->diametro_total += diametro;
-    first->diametro_promedio = (first->diametro_total / first->cantidad_arboles);
+    first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
     nodoAUbicar = first;
     first = first->tail;
     return first;
@@ -149,8 +141,7 @@ static TArboles * addArbolRec(TArboles * first, const char * nombre, long int di
 static void incArboles (TBarrios * first, const char * nombre){
     if (first != NULL){
         if (strcmp(first->nombre, nombre) == 0){
-            first->cant_arboles++;
-            first->arbol_habitante_promedio = (first->cant_arboles / first->cant_habitantes);
+            first->arbol_habitante_promedio = ((double)(++first->cant_arboles) / (double)first->cant_habitantes);
             return;
         }
         incArboles(first->next, nombre);
@@ -195,7 +186,7 @@ long int nextCantArb(arbolesADT barrios){
   if(barrios == NULL || !hasNextBarrio(barrios)){
     return 0; //sino que retorno?
   }
-  int aux = barrios->currentBarrio->cant_arboles;
+  long int aux = barrios->currentBarrio->cant_arboles;
   barrios->currentBarrio = barrios->currentBarrio->next;
   return aux;
 }
@@ -229,4 +220,28 @@ float nextDiametro (arbolesADT arboles){
     float aux = arboles->currentArbol->diametro_promedio;
     arboles->currentArbol = arboles->currentArbol->next;
     return aux;
+}
+
+void freeRecArbol(TArboles * first){
+  if(first == NULL){
+    return;
+  }
+  freeRecArbol(first->next);
+  free(first->nombre);
+  free(first);
+}
+
+void freeRecBarrio(TBarrios * first){
+  if(first == NULL){
+    return;
+  }
+  freeRecBarrio(first->next);
+  free(first->nombre)
+  free(first);
+}
+
+void freeAll(arbolesADT arboles){
+  freeRecBarrio(arboles->firstBarrio);
+  freeRec(arboles->firstArbol);
+  free(arboles);
 }
