@@ -8,9 +8,9 @@
 typedef struct barriosCDT * barriosADT;
 
 barriosADT newBarrioList(void);
-void addBarrio(barriosADT barrios, const char * nombre, long int cant_arb);
 size_t sizeBarrio (barriosADT barrios);
 void incArbolesBarrio (barriosADT barrios, const char * nombre);
+void actualizaHabitantes (barriosADT barrios, const char * nombre, int habitantes);
 void toBeginBarrio (barriosADT barrios);
 int hasNextBarrio(barriosADT barrios);
 char * nextNombreBarrio(barriosADT barrios);
