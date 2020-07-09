@@ -139,3 +139,25 @@ void freeBarrios(barriosADT barrios){
     freeRecBarrio(barrios->firstBarrio);
     free(barrios);
 }
+
+TBarrioAux * toArray (barriosADT barrios){
+    TBarrioAux * resp = malloc(barrios->size * sizeof(TBarrioAux));
+    if (resp == NULL){
+        fprintf(stderr, "There's not enough memory available for allocation");
+        return NULL;
+    }
+    TBarrios * aux = barrios->firstBarrio;
+    int i = 0;
+    while (aux != NULL){
+        resp[i].nombre = malloc(strlen(aux->nombre)+1);
+        if (resp[i].nombre == NULL){
+            fprintf(stderr, "There's not enough memory available for allocation");
+            return NULL;
+        }
+        strcpy(resp[i].nombre, aux->nombre);
+        resp[i].promedioArbHab = aux->arbol_habitante_promedio;
+        aux = aux->next;
+        i++;
+    }
+    return resp;
+}
