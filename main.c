@@ -1,8 +1,8 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "pruebaarbolesADT.h"
+#include "arbolesADT.h"
+#include "barriosADT.h"
 
 #define MAX_LEN 2048
 
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    arbolesADT arboles = newlist();
+    barriosADT barrios = newBarrioList();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -38,10 +38,11 @@ int main(int argc, char *argv[]) {
         strcpy(nombre,token);
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
-        addBarrio(arboles, nombre, habitantes);
+        addBarrio(barrios, nombre, habitantes);
     }
 
     //Leo archivo de arboles
+    arbolesADT arboles = newArbolList();
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
@@ -73,6 +74,7 @@ int main(int argc, char *argv[]) {
             index++;
         }
         addArbol(arboles, comuna, nombre, diametro);
+        incArbolesBarrio(barrios, comuna);
      }
 
     //Abro archivos de query para escribirlos
@@ -84,24 +86,25 @@ int main(int argc, char *argv[]) {
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
 
 
-    toBeginBarrio(arboles);
-    while ( hasNextBarrio(arboles)) {
-        fprintf(q1, "%s;%li\n", nextNombreBarrio(arboles), nextCantArb(arboles));
+    toBeginBarrio(barrios);
+    while ( hasNextBarrio(barrios) != -1) {
+        fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
     }
-
-    sortByAverage(arboles); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
-
-    toBeginBarrio(arboles);
-    while(hasNextBarrio(arboles)){
-      fprintf(q2, "%s;%.2lf\n", nextNombreBarrio(arboles), nextPromedioArbHab(arboles));
+    
+    //qsort
+    
+    toBeginBarrio(barrios);
+    while(hasNextBarrio(barrios) != -1){
+        fprintf(q2, "%s;%.2f\n", nextNombreBarrio(barrios), nextPromedioArbHab(barrios));
     }
 
     toBeginArbol(arboles);
     while ( hasNextArbol(arboles)) {
-        fprintf(q3, "%s;%.2lf\n", nextNombreArbol(arboles), nextDiametro(arboles));
+        fprintf(q3, "%s;%.2f\n", nextNombreArbol(arboles), nextDiametro(arboles));
     }
 
-    freeAll(arboles);
+    freeArboles(arboles);
+    freeBarrios(barrios);
 
     fclose(fileArboles);
     fclose(fileBarrios);
@@ -109,3 +112,4 @@ int main(int argc, char *argv[]) {
     fclose(q2);
     fclose(q3);
 }
+
