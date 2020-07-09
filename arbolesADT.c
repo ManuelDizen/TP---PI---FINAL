@@ -155,7 +155,7 @@ void sortArbHab (arbolesADT arboles){
     for (int j = 0; j < (arboles->sizeBarrios -1); j++){
         ok = 0;
         for (int i = 0; i < (arboles->sizeBarrios - 1 - j); i++){
-            long int dif = arboles->barrios[i].arbol_habitante_promedio - arboles->barrios[i+1].arbol_habitante_promedio;
+            double dif = arboles->barrios[i].arbol_habitante_promedio - arboles->barrios[i+1].arbol_habitante_promedio;
             if (dif < 0 || (dif == 0 && strcmp(arboles->barrios[i].nombre, arboles->barrios[i+1].nombre) > 0)){
                 swapBarrio(arboles->barrios, i);
                 ok = 1;
@@ -175,7 +175,7 @@ void sortDiam (arbolesADT arboles){
     for (int j = 0; j < (arboles->sizeArboles -1); j++){
         ok = 0;
         for (int i = 0; i < (arboles->sizeArboles - 1 - j); i++){
-            long int dif = arboles->arboles[i].diametro_promedio - arboles->arboles[i+1].diametro_promedio;
+            double dif = arboles->arboles[i].diametro_promedio - arboles->arboles[i+1].diametro_promedio;
             if (dif < 0 || (dif == 0 && strcmp(arboles->arboles[i].nombre, arboles->arboles[i+1].nombre) > 0)){
                 swapArbol(arboles->arboles, i);
                 ok = 1;
