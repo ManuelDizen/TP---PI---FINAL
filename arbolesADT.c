@@ -24,24 +24,6 @@ arbolesADT newArbolList(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
-static TArboles * creaNodoArbol(const char * nombre, long int diametro){
-    TArboles * aux = malloc(sizeof(TArboles));
-    if(aux == NULL){
-      fprintf(stderr, "There's not enough memory available for allocation");
-      return NULL;
-    }
-    aux->nombre = malloc(strlen(nombre)+1);
-    if (aux->nombre == NULL){
-        fprintf(stderr, "There's not enough memory available for allocation");
-        return NULL;
-    }
-    strcpy(aux->nombre, nombre);
-    aux->diametro_total = aux->diametro_promedio = diametro;
-    aux->cantidad_arboles = 1;
-    aux->next = NULL;
-    return aux;
-}
-
 static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * ok){
   if(first == NULL){
     first = nodoAUbicar;
@@ -68,11 +50,24 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
 
 static TArboles * addArbolRec(TArboles * first, const char * nombre, long int diametro, TArboles * nodoAUbicar){
   if(first == NULL){
-    nodoAUbicar = creaNodoArbol(nombre, diametro);
+    TArboles * aux = malloc(sizeof(TArboles));
+    if(aux == NULL){
+        fprintf(stderr, "There's not enough memory available for allocation");
+        return NULL;
+    }
+    aux->nombre = malloc(strlen(nombre)+1);
+    if(aux->nombre == NULL){
+        fprintf(stderr, "There's not enough memory available for allocation");
+        return NULL;
+    }
+    strcpy(aux->nombre, nombre);
+    aux->diametro_total = aux->diametro_promedio = diametro;
+    aux->next = NULL;
+    nodoAUbicar = aux;
     return first;
   }
-  int comp;
-  if((comp = strcmp(first->nombre, nombre)) == 0){
+  
+  if((strcmp(first->nombre, nombre)) == 0){
     first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
     nodoAUbicar = first;
     first = first->next;
