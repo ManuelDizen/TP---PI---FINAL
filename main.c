@@ -23,14 +23,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    arbolesADT barrios = newlist();
+    arbolesADT arboles = newlist();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
-        char * nombre = malloc(strlen(token));
+        char * nombre = malloc(strlen(token)+1);
         if (nombre == NULL){
             fprintf(stderr, "There's not enough memory available for allocation");
             return 1;
@@ -38,20 +38,21 @@ int main(int argc, char *argv[]) {
         strcpy(nombre,token);
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
-        addBarrio(barrios, nombre, habitantes);
+        addBarrio(arboles, nombre, habitantes);
     }
 
     //Leo archivo de arboles
-    char line2[MAX_LEN];
-    fgets(line2, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
-    while(fgets(line2, MAX_LEN, fileArboles)!=NULL){
-        char * token, comuna, nombre;
+    fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
+    while(fgets(line, MAX_LEN, fileArboles)!=NULL){
+        char * token;
+        char * comuna;
+        char * nombre;
         int index = 0;
         int diametro;
-        for (token = strtok (texto, ";"); token != NULL; token = strtok (NULL, ";"))
+        for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
             if (index == 2){
-                comuna = malloc(strlen(token));
+                comuna = malloc(strlen(token)+1);
                 if (comuna == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
                     return 1;
@@ -59,7 +60,7 @@ int main(int argc, char *argv[]) {
                 strcpy(comuna, token);
             }
             else if (index == 7){
-                nombre = malloc(strlen(token));
+                nombre = malloc(strlen(token)+1);
                 if (nombre == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
                     return 1;
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
             }
             index++;
         }
-        addArbol(barrios, comuna, nombre, diametro);
+        addArbol(arboles, comuna, nombre, diametro);
      }
 
     //Abro archivos de query para escribirlos
@@ -83,26 +84,24 @@ int main(int argc, char *argv[]) {
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
 
 
-    toBeginBarrio(barrios);
-    while ( hasNextBarrio(barrios)) {
-        fprintf("%s;", NombreBarrio(barrios));
-        fprintf("%d\n", nextCantArb(barrios));
+    toBeginBarrio(arboles);
+    while ( hasNextBarrio(arboles)) {
+        fprintf(q1, "%s;%li\n", nextNombreBarrio(arboles), nextCantArb(arboles));
     }
 
-    //para primer query funciona el orden, para segundo hay que hacer un BUBBLE
+    sortByAverage(arboles); //Falta escribir. Para sortear la lista por orden descendente de arb. por habitante
 
-
-    toBeginBarrio(barrios);
-    while ( hasNextBarrio(barrios)) {
-        fprintf("%s;", NombreBarrio(barrios));
-        fprintf("%d\n", nextArbHabitante(barrios));
+    toBeginBarrio(arboles);
+    while(hasNextBarrio(arboles)){
+      fprintf(q2, "%s;%.2lf\n", nextNombreBarrio(arboles), nextPromedioArbHab(arboles));
     }
 
-    toBeginArbol(barrios);
-    while ( hasNextArbol(barrios)) {
-        fprintf("%s;", NombreArbol(barrios));
-        fprintf("%d\n", nextDiametro(barrios));
+    toBeginArbol(arboles);
+    while ( hasNextArbol(arboles)) {
+        fprintf(q3, "%s;%.2lf\n", nextNombreArbol(arboles), nextDiametro(arboles));
     }
+
+    freeAll(arboles);
 
     fclose(fileArboles);
     fclose(fileBarrios);
