@@ -87,19 +87,19 @@ int main(int argc, char *argv[]) {
 
 
     toBeginBarrio(barrios);
-    while ( hasNextBarrio(barrios) != -1) {
+    while (hasNextBarrio(barrios)) {
         fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
     }
     
     //qsort
     
     toBeginBarrio(barrios);
-    while(hasNextBarrio(barrios) != -1){
+    while(hasNextBarrio(barrios)){
         fprintf(q2, "%s;%.2f\n", nextNombreBarrio(barrios), nextPromedioArbHab(barrios));
     }
 
     toBeginArbol(arboles);
-    while ( hasNextArbol(arboles)) {
+    while (hasNextArbol(arboles)) {
         fprintf(q3, "%s;%.2f\n", nextNombreArbol(arboles), nextDiametro(arboles));
     }
 
