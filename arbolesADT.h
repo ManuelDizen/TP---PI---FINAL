@@ -9,7 +9,7 @@ typedef struct arbolesCDT * arbolesADT;
 arbolesADT newlist(void);
 
 void addBarrio(arbolesADT arboles, const char * name, long int cant);
-void addArbol(arbolesADT arboles, char * comuna, char * nombre, long int diametro);
+void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro);
 
 void toBeginBarrio (arbolesADT barrios);
 void toBeginArbol (arbolesADT arboles);

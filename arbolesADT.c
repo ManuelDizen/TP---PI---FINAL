@@ -104,7 +104,7 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar){
     return first;
   }
   double comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio;
-  int comp2 = strcmp(first->nombre, nodoAUbicar->nombre));
+  int comp2 = strcmp(first->nombre, nodoAUbicar->nombre);
   if(comp1 < 0 || (comp1 == 0 && comp2 < 0) ){
     nodoAUbicar->next = first;
     first = nodoAUbicar;
@@ -130,7 +130,7 @@ static TArboles * addArbolRec(TArboles * first, const char * nombre, long int di
   if((comp = strcmp(first->nombre, nombre)) == 0){
     first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
     nodoAUbicar = first;
-    first = first->tail;
+    first = first->next;
     return first;
   }
   first->next=addArbolRec(first->next, nombre, diametro, nodoAUbicar);
@@ -236,7 +236,7 @@ void freeRecBarrio(TBarrios * first){
     return;
   }
   freeRecBarrio(first->next);
-  free(first->nombre)
+  free(first->nombre);
   free(first);
 }
 
