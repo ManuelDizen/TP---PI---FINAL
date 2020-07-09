@@ -28,37 +28,28 @@ size_t sizeBarrio (barriosADT barrios){
     return barrios->size;
 }
 
-static TBarrios * crearNodoBarrio(const char * nombre, long int cant_hab){
-    TBarrios * aux = malloc(sizeof(struct TBarrios));
-    if(aux == NULL){
-      fprintf(stderr, "There's not enough memory available for allocation");
-      return NULL;
-    }
-    aux->nombre = malloc(strlen(nombre)+1);
-    if(aux->nombre == NULL){
-      fprintf(stderr, "There's not enough memory available for allocation");
-      return NULL;
-    }
-    strcpy(aux->nombre, nombre);
-    aux->cant_habitantes = cant_hab;
-    aux->cant_arboles = aux->arbol_habitante_promedio = 0;
-    aux->next = NULL;
-    return aux;
-}
+
 
 static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_hab, int * ok) {
-    int comp;
-    if(first == NULL || (comp = strcmp(first->nombre, nombre) > 0)){
-        TBarrios * aux = creaNodoBarrio(nombre, cant_hab);
+    if(first == NULL ||strcmp(first->nombre, nombre) > 0){
+        TBarrios * aux = malloc(sizeof(struct TBarrios));
         if(aux == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
-          return first;
+          return NULL;
         }
+        aux->nombre = malloc(strlen(nombre)+1);
+        if(aux->nombre == NULL){
+            fprintf(stderr, "There's not enough memory available for allocation");
+            return NULL;
+        }
+        strcpy(aux->nombre, nombre);
+        aux->cant_habitantes = cant_hab;
+        aux->cant_arboles = aux->arbol_habitante_promedio = 0;
         aux->next = first;
         *ok = 1;
         return aux;
     }
-    if (comp < 0)
+    if(strcmp(first->nombre, nombre)< 0)
         first->next = addBarrioRec(first->next, nombre, cant_hab, ok);
     return first;
 }
