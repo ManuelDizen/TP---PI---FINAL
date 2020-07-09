@@ -28,7 +28,7 @@ size_t sizeBarrio (barriosADT barrios){
     return barrios->size;
 }
 
-static TBarrios * nuevoBarrio(const char * nombre, long int cant_hab){
+static TBarrios * crearNodoBarrio(const char * nombre, long int cant_hab){
     TBarrios * aux = malloc(sizeof(struct TBarrios));
     if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
@@ -41,74 +41,48 @@ static TBarrios * nuevoBarrio(const char * nombre, long int cant_hab){
     }
     strcpy(aux->nombre, nombre);
     aux->cant_habitantes = cant_hab;
-    aux->cant_arboles = 1;
+    aux->cant_arboles = aux->arbol_habitante_promedio = 0;
+    aux->next = NULL;
     return aux;
 }
 
-static void findBarrio (TBarrios * first, const char * nombre, TBarrios * barrioAUbicar, int * agregar){
-    if (first == NULL){
-        barrioAUbicar = nuevoBarrio(nombre, 0);
-        *agregar = 1;
-        return;
+static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_hab, int * ok) {
+    int comp;
+    if(first == NULL || (comp = strcmp(first->nombre, nombre) > 0)){
+        TBarrios * aux = creaNodoBarrio(nombre, cant_hab);
+        if(aux == NULL){
+          fprintf(stderr, "There's not enough memory available for allocation");
+          return first;
+        }
+        aux->next = first;
+        *ok = 1;
+        return aux;
     }
-    if (strcmp(first->nombre, nombre) == 0){
-        first->cant_arboles++;
-        barrioAUbicar = first;
-        first = first->next;
-        return;
-    }
-    findBarrio(first->next, nombre, barrioAUbicar, agregar);
-}
-
-static TBarrios * ubicaBarrio(TBarrios * first, TBarrios * barrioAUbicar, int * ok){
-    if(first == NULL){
-        first = barrioAUbicar;
-        return first;
-    }
-    long int comp1 = barrioAUbicar->cant_arboles - first->cant_arboles;
-    if(comp1 > 0 || (comp1 == 0 && strcmp(barrioAUbicar->nombre, first->nombre) < 0)){
-        barrioAUbicar->next = first;
-        return barrioAUbicar;
-    }
-    *ok = 1;
-    first->next = ubicaBarrio(first->next, barrioAUbicar, ok);
+    if (comp < 0)
+        first->next = addBarrioRec(first->next, nombre, cant_hab, ok);
     return first;
 }
 
-static void incBarrio (barriosADT barrios, TBarrios * barrioAUbicar, int agregar){
-    if (agregar)
-        barrios->size++;
+void addBarrio(barriosADT barrios, const char * nombre, long int cant_hab){
+    if(barrios == NULL){
+      return;
+    }
     int ok = 0;
-    barrios->firstBarrio = ubicaBarrio(barrios->firstBarrio, barrioAUbicar, &ok);
-    if (!ok)
-        barrios->firstBarrio = barrioAUbicar;
+    barrios->firstBarrio = addBarrioRec(barrios->firstBarrio, nombre, cant_hab, &ok);
+    if (ok)
+        barrios->size++;
 }
 
+//HAY QUE ESCRIBIRLA
 void incArbolesBarrio (barriosADT barrios, const char * nombre){
-    TBarrios * barrioAUbicar = NULL;
-    int agregar = 0;
-    findBarrio(barrios->firstBarrio, nombre, barrioAUbicar, &agregar);
-    incBarrio(barrios, barrioAUbicar, agregar);
-}
-
-static void actualizaHabitantesRec (TBarrios * first, const char * nombre, int habitantes, TBarrios * barrioAUbicar, int * agregar){
-    if (first == NULL){
-        barrioAUbicar = nuevoBarrio(nombre, habitantes);
-        *agregar = 1;
-        return;
+    //buscarlo, sumarle uno, fijarse si hay que mover el nodo
+    if (first != NULL){
+        if (strcmp(first->nombre, nombre) == 0){
+            first->arbol_habitante_promedio = ((double)(++first->cant_arboles) / (double)first->cant_habitantes);
+            return;
+        }
+        incArbolesBarrio(first->next, nombre);
     }
-    if (strcmp(first->nombre, nombre) == 0){
-        first->cant_habitantes = habitantes;
-        return;
-    }
-    actualizaHabitantesRec(first->next, nombre, habitantes, barrioAUbicar, agregar);
-}
-
-void actualizaHabitantes (barriosADT barrios, const char * nombre, int habitantes){
-    int agregar = 0;
-    TBarrios * barrioAUbicar = NULL;
-    actualizaHabitantesRec(barrios->firstBarrio, nombre, habitantes, barrioAUbicar, &agregar);
-    incBarrio(barrios, barrioAUbicar, agregar);
 }
 
 void toBeginBarrio (barriosADT barrios){
@@ -141,7 +115,7 @@ long int nextCantArb(barriosADT barrios){
     return aux;
 }
 
-double nextPromedioArbHab(barriosADT barrios){
+double nextCantPromedioArboles(barriosADT barrios){
   if(!hasNextBarrio(barrios)){
     return -1;
   }
