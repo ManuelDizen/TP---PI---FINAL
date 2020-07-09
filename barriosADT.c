@@ -1,7 +1,6 @@
 
 
 #include "barriosADT.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +28,7 @@ size_t sizeBarrio (barriosADT barrios){
     return barrios->size;
 }
 
-static TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
+static TBarrios * nuevoBarrio(const char * nombre, long int cant_hab){
     TBarrios * aux = malloc(sizeof(struct TBarrios));
     if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
@@ -42,50 +41,74 @@ static TBarrios * creaNodoBarrio(const char * nombre, long int cant_hab){
     }
     strcpy(aux->nombre, nombre);
     aux->cant_habitantes = cant_hab;
-    aux->cant_arboles = aux->arbol_habitante_promedio = 0;
+    aux->cant_arboles = 1;
     return aux;
 }
 
-static TBarrios * addBarrioRec(TBarrios * first, const char * nombre, long int cant_arb, int * ok) {
-    long int comp, comp2;
-    if(first == NULL || (comp = cant_arb - first->cant_arboles) > 0 || (comp < EPSILON && (comp2=strcmp(nombre, first->nombre)) > 0)) {
-        TBarrios * aux = creaNodoBarrio(nombre, cant_arb);
-        if(aux == NULL){
-          fprintf(stderr, "There's not enough memory available for allocation");
-          return first;
-        }
-        aux->next = first;
-        *ok = 1;
-        return aux;
+static void findBarrio (TBarrios * first, const char * nombre, TBarrios * barrioAUbicar, int * agregar){
+    if (first == NULL){
+        barrioAUbicar = nuevoBarrio(nombre, 0);
+        *agregar = 1;
+        return;
     }
-    if (comp == 0 && comp2 < 0){
-        TBarrios * aux2 = creaNodoBarrio(nombre, cant_arb);
-        if(aux2 == NULL){
-          fprintf(stderr, "There's not enough memory available for allocation");
-          return first;
-        }
-        aux2->next = first->next;
-        first->next = aux2;
-        *ok = 1;
+    if (strcmp(first->nombre, nombre) == 0){
+        first->cant_arboles++;
+        barrioAUbicar = first;
+        first = first->next;
+        return;
+    }
+    findBarrio(first->next, nombre, barrioAUbicar, agregar);
+}
+
+static TBarrios * ubicaBarrio(TBarrios * first, TBarrios * barrioAUbicar, int * ok){
+    if(first == NULL){
+        first = barrioAUbicar;
         return first;
     }
-    first->next = addBarrioRec(first->next, nombre, cant_arb, ok);
+    long int comp1 = barrioAUbicar->cant_arboles - first->cant_arboles;
+    if(comp1 > 0 || (comp1 == 0 && strcmp(barrioAUbicar->nombre, first->nombre) < 0)){
+        barrioAUbicar->next = first;
+        return barrioAUbicar;
+    }
+    *ok = 1;
+    first->next = ubicaBarrio(first->next, barrioAUbicar, ok);
     return first;
 }
 
-void addBarrio(barriosADT barrios, const char * nombre, long int cant_arb){
-    int ok = 0;
-    if(barrios == NULL){
-      return;
-    }
-    barrios->firstBarrio = addBarrioRec(barrios->firstBarrio, nombre, cant_arb, &ok);
-    if (ok)
+static void incBarrio (barriosADT barrios, TBarrios * barrioAUbicar, int agregar){
+    if (agregar)
         barrios->size++;
+    int ok = 0;
+    barrios->firstBarrio = ubicaBarrio(barrios->firstBarrio, barrioAUbicar, &ok);
+    if (!ok)
+        barrios->firstBarrio = barrioAUbicar;
 }
 
-//ESCRIBIR
 void incArbolesBarrio (barriosADT barrios, const char * nombre){
-    //buscar el barrio, sumarle uno, fijarse si hay que mover el nodo
+    TBarrios * barrioAUbicar = NULL;
+    int agregar = 0;
+    findBarrio(barrios->firstBarrio, nombre, barrioAUbicar, &agregar);
+    incBarrio(barrios, barrioAUbicar, agregar);
+}
+
+static void actualizaHabitantesRec (TBarrios * first, const char * nombre, int habitantes, TBarrios * barrioAUbicar, int * agregar){
+    if (first == NULL){
+        barrioAUbicar = nuevoBarrio(nombre, habitantes);
+        *agregar = 1;
+        return;
+    }
+    if (strcmp(first->nombre, nombre) == 0){
+        first->cant_habitantes = habitantes;
+        return;
+    }
+    actualizaHabitantesRec(first->next, nombre, habitantes, barrioAUbicar, agregar);
+}
+
+void actualizaHabitantes (barriosADT barrios, const char * nombre, int habitantes){
+    int agregar = 0;
+    TBarrios * barrioAUbicar = NULL;
+    actualizaHabitantesRec(barrios->firstBarrio, nombre, habitantes, barrioAUbicar, &agregar);
+    incBarrio(barrios, barrioAUbicar, agregar);
 }
 
 void toBeginBarrio (barriosADT barrios){
