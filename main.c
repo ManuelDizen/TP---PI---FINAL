@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     //Almaceno en query1BUE.csv 
     toBeginBarrio(barrios);
     while (hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
+        fprintf(q1, "%s;%li\n", nombreBarrio(barrios), nextCantArb(barrios));
     }
     
     //Paso la lista de barrios a un arreglo para poder usar qsort y ordenar la lista en base a cantidad de árboles por habitante
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     toBeginArbol(arboles);
     printf("%d\n", hasNextArbol(arboles));
     while (hasNextArbol(arboles)) {
-        printf("%s;%.2f\n", nextNombreArbol(arboles), nextDiametro(arboles));
+        printf("%s;%.2f\n", nombreArbol(arboles), nextDiametro(arboles));
     }
 
     //Libero la memoria utilizada por ambas listas.
