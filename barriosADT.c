@@ -61,7 +61,7 @@ void addBarrio(barriosADT barrios, const char * nombre, long int cant_hab){
     }
 }
 
-TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar){
+TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int * primero){
     if(first == NULL){
         first = barrioAUbicar;
         return first;
@@ -71,28 +71,33 @@ TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar){
         barrioAUbicar->next = first;
         return barrioAUbicar;
     }
-    first->next = ubicaBarriosPorTotal(first->next, barrioAUbicar);
+    *primero = 1;
+    first->next = ubicaBarriosPorTotal(first->next, barrioAUbicar, primero);
     return first;
 }
 
 void incArbolesBarrioRec(barriosADT barrios, TBarrios * first, TBarrios * barrioAUbicar, const char * nombre){
-    if(first == NULL){
-        return;
+    TBarrios * aux = first;
+    while (aux != NULL && strcmp(aux->nombre, nombre) != 0)
+        aux = aux->next;
+    if (aux != NULL){
+        aux->cant_arboles++;
+        aux->arbol_habitante_promedio = (double)aux->cant_arboles / aux->cant_habitantes;
+        TBarrios * barrioAUbicar = aux;
+        aux = aux->next;
+        *ok = 1;
+        return barrioAUbicar;
     }
-    if(strcmp(first->nombre, nombre) == 0){
-        first->cant_arboles++;
-        first->arbol_habitante_promedio = (double)first->cant_arboles / first->cant_habitantes;
-        barrioAUbicar = first;
-        first = first->next;
-        //barrios->firstBarrio = ubicaBarriosPorTotal(barrios->firstBarrio, barrioAUbicar);
-        return;
-    }
-    incArbolesBarrioRec(barrios, first->next, barrioAUbicar, nombre);
+    return NULL;
 }
 
 void incArbolesBarrio (barriosADT barrios, const char * nombre){
-    TBarrios * barrioAUbicar = NULL;
-    incArbolesBarrioRec(barrios, barrios->firstBarrio, barrioAUbicar, nombre);
+    int ok = 0, primero = 0;
+    TBarrios * barrioAUbicar = incArbolesBarrioRec(barrios->firstBarrio, nombre, &ok);
+    if (ok) //si no encontró el barrio, no hace nada
+        barrios->firstBarrio = ubicaBarriosPorTotal(barrios->firstBarrio, barrioAUbicar, &primero);
+    if (primero)
+        barrios->firstBarrio = barrioAUbicar;
 }
 
 void toBeginBarrio (barriosADT barrios){
