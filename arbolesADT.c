@@ -24,6 +24,7 @@ arbolesADT newArbolList(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
+//Agrega el nodoAUbicar a la lista descendentemente por promedio de diametro. Si son iguales (menor a EPSILON ya que redondeamos a 2 decimales), lo agrega alfabéticamente
 static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * ok){
   if(first == NULL){
       first = nodoAUbicar;
@@ -45,7 +46,8 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
   return first;
 }
 
-static TArboles * encuentraLugar (TArboles * first, const char * nombre, long int diametro){
+//Encuentra el nodo el cual quiero insertar. Si ya existe, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no existe, lo crea y lo devuelve
+static TArboles * encuentraNodo (TArboles * first, const char * nombre, long int diametro){
   TArboles * nodoAUbicar = malloc(sizeof(TArboles));
   if(nodoAUbicar == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
@@ -73,7 +75,7 @@ static TArboles * encuentraLugar (TArboles * first, const char * nombre, long in
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     if (arboles != NULL){
         int ok = 0;
-        TArboles * nodoAUbicar = encuentraLugar(arboles->firstArbol, nombre, diametro);
+        TArboles * nodoAUbicar = encuentraNodo(arboles->firstArbol, nombre, diametro);
         arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar, &ok);
         if (!ok)
             arboles->firstArbol = nodoAUbicar;
