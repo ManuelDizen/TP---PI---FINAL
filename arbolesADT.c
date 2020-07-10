@@ -36,15 +36,13 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
       nodoAUbicar->next = first;
       return nodoAUbicar;
   }
-  if(comp1 < EPSILON && comp2 < 0){
+  if(comp1 < EPSILON && comp2 <= 0){
       nodoAUbicar->next = first->next;
       return first;
   }
-  if (comp1 < EPSILON && comp2 == 0)
-      return nodoAUbicar;
-    *ok = 1; // si ok vale 1, no es la primer llamada
-    first->next = ubicaPorDiam(first->next, nodoAUbicar, ok);
-    return first;
+  *ok = 1; // si ok vale 1, no es la primer llamada
+  first->next = ubicaPorDiam(first->next, nodoAUbicar, ok);
+  return first;
 }
 
 static TArboles * encuentraLugar (TArboles * first, const char * nombre, long int diametro){
