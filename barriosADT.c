@@ -61,7 +61,8 @@ void addBarrio(barriosADT barrios, const char * nombre, long int cant_hab){
     }
 }
 
-TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int * primero){
+//Agrega el barrioAUbicar a la lista descendentemente por cantidad de árboles. Si son iguales, lo inserta alfabéticamente 
+static TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int * primero){
     if(first == NULL){
         first = barrioAUbicar;
         return first;
@@ -76,7 +77,8 @@ TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int 
     return first;
 }
 
-void incArbolesBarrioRec(barriosADT barrios, TBarrios * first, TBarrios * barrioAUbicar, const char * nombre){
+//Encuentra el barrio. Si lo encuentra, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no lo encuentra, devuelve NULL.
+static void incArbolesBarrioRec(barriosADT barrios, TBarrios * first, TBarrios * barrioAUbicar, const char * nombre){
     TBarrios * aux = first;
     while (aux != NULL && strcmp(aux->nombre, nombre) != 0)
         aux = aux->next;
@@ -96,7 +98,7 @@ void incArbolesBarrio (barriosADT barrios, const char * nombre){
     TBarrios * barrioAUbicar = incArbolesBarrioRec(barrios->firstBarrio, nombre, &ok);
     if (ok) //si no encontró el barrio, no hace nada
         barrios->firstBarrio = ubicaBarriosPorTotal(barrios->firstBarrio, barrioAUbicar, &primero);
-    if (primero)
+    if (primero)  //si lo inserté al principio
         barrios->firstBarrio = barrioAUbicar;
 }
 
@@ -108,8 +110,8 @@ int hasNextBarrio(barriosADT barrios){
     return barrios != NULL && barrios->currentBarrio != NULL;
 }
 
-char * nextNombreBarrio(barriosADT barrios){
-    if(barrios == NULL || !hasNextBarrio(barrios)){
+char * nombreBarrio(barriosADT barrios){
+    if(!hasNextBarrio(barrios)){
         return NULL;
     }
     char * aux = malloc(strlen(barrios->currentBarrio->nombre)+1);
@@ -129,16 +131,6 @@ long int nextCantArb(barriosADT barrios){
     barrios->currentBarrio = barrios->currentBarrio->next;
     return aux;
 }
-
-double nextCantPromedioArboles(barriosADT barrios){
-  if(!hasNextBarrio(barrios)){
-    return -1;
-  }
-  double aux = barrios->currentBarrio->arbol_habitante_promedio;
-  barrios->currentBarrio = barrios->currentBarrio->next;
-  return aux;
-}
-
 
 static void freeRecBarrio(TBarrios * first){
     if(first == NULL){
