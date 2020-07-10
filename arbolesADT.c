@@ -66,9 +66,9 @@ TArboles * encuentraNodo(TArboles * first, const char * nombre, int diametro, TA
     return first;
   }
   if(strcmp(first->nombre, nombre) == 0){
-    first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
     nodoAUbicar = first;
     first = first->next;
+    nodoAUbicar->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
     nodoAUbicar->next = NULL;
     return first;
   }
