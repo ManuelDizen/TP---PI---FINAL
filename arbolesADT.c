@@ -47,14 +47,12 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
 }
 
 //Encuentra el nodo el cual quiero insertar. Si ya existe, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no existe, lo crea y lo devuelve
-static TArboles * encuentraNodo (TArboles * first, const char * nombre, long int diametro){
-  while(first != NULL && strcmp(first->nombre, nombre) != 0)
-        first = first->next;
+TArboles * encuentraNodo(TArboles * first, const char * nombre, int diametro, TArboles * nodoAUbicar){
   if(first == NULL){
-    TArboles * nodoAUbicar = malloc(sizeof(TArboles));
-    if(NodoAUbicar == NULL){
-        fprintf(stderr, "There's not enough memory available for allocation");
-        return NULL;
+    nodoAUbicar = malloc(sizeof(TArboles));
+    if(nodoAUbicar == NULL){
+      fprintf(stderr, "There's not enough memory available for allocation");
+      return NULL;
     }
     nodoAUbicar->nombre = malloc(strlen(nombre)+1);
     if (nodoAUbicar->nombre == NULL){
@@ -65,19 +63,23 @@ static TArboles * encuentraNodo (TArboles * first, const char * nombre, long int
     nodoAUbicar->diametro_total = nodoAUbicar->diametro_promedio = diametro;
     nodoAUbicar->cantidad_arboles = 1;
     nodoAUbicar->next = NULL;
-    return nodoAUbicar;
+    return first;
   }
-  first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
-  TArboles * aux = first;
-  aux->next = NULL;
-  first = first->next;
-  return aux;
+  if(strcmp(first->nombre, nombre) == 0){
+    first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
+    nodoAUbicar = first;
+    first = first->next;
+    nodoAUbicar->next = NULL;
+    return first;
+  }
+  first->next = encuentraNodo(first->next, nombre, diametro, nodoAUbicar);
+  return first;
 }
 
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     if (arboles != NULL){
         int ok = 0;
-        TArboles * nodoAUbicar = encuentraNodo(arboles->firstArbol, nombre, diametro);
+        arboles->firstArbol = encuentraNodo(arboles->firstArbol, nombre, diametro);
         arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar, &ok);
         if (!ok)
             arboles->firstArbol = nodoAUbicar;
