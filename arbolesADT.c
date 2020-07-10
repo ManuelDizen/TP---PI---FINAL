@@ -48,28 +48,30 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
 
 //Encuentra el nodo el cual quiero insertar. Si ya existe, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no existe, lo crea y lo devuelve
 static TArboles * encuentraNodo (TArboles * first, const char * nombre, long int diametro){
-  TArboles * nodoAUbicar = malloc(sizeof(TArboles));
-  if(nodoAUbicar == NULL){
-      fprintf(stderr, "There's not enough memory available for allocation");
-      return NULL;
-  }
   while(first != NULL && strcmp(first->nombre, nombre) != 0)
         first = first->next;
-    if(first == NULL){
-      nodoAUbicar->nombre = malloc(strlen(nombre)+1);
-      if (nodoAUbicar->nombre == NULL){
-          fprintf(stderr, "There's not enough memory available for allocation");
-          return NULL;
-      }
-      strcpy(nodoAUbicar->nombre, nombre);
-      nodoAUbicar->diametro_total = nodoAUbicar->diametro_promedio = diametro;
-      nodoAUbicar->cantidad_arboles = 1;
-      nodoAUbicar->next = NULL;
-      *ok = 1;
-      return nodoAUbicar;
+  if(first == NULL){
+    TArboles * nodoAUbicar = malloc(sizeof(TArboles));
+    if(NodoAUbicar == NULL){
+        fprintf(stderr, "There's not enough memory available for allocation");
+        return NULL;
     }
-    first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
-    return first->next;
+    nodoAUbicar->nombre = malloc(strlen(nombre)+1);
+    if (nodoAUbicar->nombre == NULL){
+        fprintf(stderr, "There's not enough memory available for allocation");
+        return NULL;
+    }
+    strcpy(nodoAUbicar->nombre, nombre);
+    nodoAUbicar->diametro_total = nodoAUbicar->diametro_promedio = diametro;
+    nodoAUbicar->cantidad_arboles = 1;
+    nodoAUbicar->next = NULL;
+    return nodoAUbicar;
+  }
+  first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
+  TArboles * aux = first;
+  aux->next = NULL;
+  first = first->next;
+  return aux;
 }
 
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
