@@ -26,56 +26,56 @@ arbolesADT newArbolList(void){
 
 static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * ok){
   if(first == NULL){
-      return nodoAUbicar;
+      first = nodoAUbicar;
+      first->next = NULL;
+      return first;
   }
   double comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio;
   int comp2 = strcmp(first->nombre, nodoAUbicar->nombre);
-  if(comp1 < 0 || (comp1 < EPSILON && comp2 < 0) ){
+  if(comp1 < 0 || (comp1 < EPSILON && comp2 > 0) ){
       nodoAUbicar->next = first;
       return nodoAUbicar;
   }
-  if(comp1 < EPSILON && comp2 > 0){
+  if(comp1 < EPSILON && comp2 < 0){
       nodoAUbicar->next = first->next;
-      first->next = nodoAUbicar;
       return first;
   }
+  if (comp1 < EPSILON && comp2 == 0)
+      return nodoAUbicar;
     *ok = 1; // si ok vale 1, no es la primer llamada
     first->next = ubicaPorDiam(first->next, nodoAUbicar, ok);
     return first;
 }
 
-static void findSpot (TArboles * first, const char * nombre, long int diametro, TArboles * nodoAUbicar){
-  if(first == NULL){
-      nodoAUbicar = malloc(sizeof(TArboles));
-      if(nodoAUbicar == NULL){
-        fprintf(stderr, "There's not enough memory available for allocation");
-        return;
-      }
+static TArboles * encuentraLugar (TArboles * first, const char * nombre, long int diametro){
+  TArboles * nodoAUbicar = malloc(sizeof(TArboles));
+  if(nodoAUbicar == NULL){
+      fprintf(stderr, "There's not enough memory available for allocation");
+      return NULL;
+  }
+  while(first != NULL && strcmp(first->nombre, nombre) != 0)
+        first = first->next;
+    if(first == NULL){
       nodoAUbicar->nombre = malloc(strlen(nombre)+1);
       if (nodoAUbicar->nombre == NULL){
           fprintf(stderr, "There's not enough memory available for allocation");
-          return;
+          return NULL;
       }
       strcpy(nodoAUbicar->nombre, nombre);
       nodoAUbicar->diametro_total = nodoAUbicar->diametro_promedio = diametro;
       nodoAUbicar->cantidad_arboles = 1;
       nodoAUbicar->next = NULL;
-      return;
-  }
-  if(strcmp(first->nombre, nombre) == 0){
+      *ok = 1;
+      return nodoAUbicar;
+    }
     first->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
-    nodoAUbicar = first;
-    first = first->next;
-  }
-  else
-    findSpot(first->next, nombre, diametro, nodoAUbicar);
+    return first->next;
 }
 
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     if (arboles != NULL){
-        TArboles * nodoAUbicar = NULL;
         int ok = 0;
-        findSpot(arboles->firstArbol, nombre, diametro, nodoAUbicar);
+        TArboles * nodoAUbicar = encuentraLugar(arboles->firstArbol, nombre, diametro);
         arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar, &ok);
         if (!ok)
             arboles->firstArbol = nodoAUbicar;
