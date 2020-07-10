@@ -90,7 +90,7 @@ int hasNextArbol(arbolesADT arboles){
     return arboles != NULL && arboles->currentArbol != NULL;
 }
 
-char * nextNombreArbol (arbolesADT arboles){
+char * nombreArbol (arbolesADT arboles){
     if (!hasNextArbol(arboles)){
         return NULL;
     }
