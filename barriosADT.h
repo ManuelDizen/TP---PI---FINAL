@@ -5,12 +5,12 @@
 
 #include <stdio.h>
 
+typedef struct barriosCDT * barriosADT;
+
 typedef struct TBarrioAux{
     char * nombre;
     double promedioArbHab;
 } TBarrioAux;
-
-typedef struct barriosCDT * barriosADT;
 
 barriosADT newBarrioList(void);
 void addBarrio(barriosADT barrios, const char * nombre, long int cant_arb);
@@ -20,9 +20,8 @@ void toBeginBarrio (barriosADT barrios);
 int hasNextBarrio(barriosADT barrios);
 char * nextNombreBarrio(barriosADT barrios);
 long int nextCantArb(barriosADT barrios);
-double nextPromedioArbHab(barriosADT barrios);
+double nextCantPromedioArboles(barriosADT barrios);
 void freeBarrios(barriosADT barrios);
 TBarrioAux * toArray (barriosADT barrios);
-
 
 #endif /* barriosADT_h */

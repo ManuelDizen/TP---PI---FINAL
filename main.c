@@ -3,11 +3,14 @@
 #include <stdlib.h>
 #include "arbolesADT.h"
 #include "barriosADT.h"
+#define EPSILON 0.01
 
 #define MAX_LEN 2048
 
-int main(int argc, char *argv[]) {
+int compare (const void * aux1,const void * aux2);
 
+int main(int argc, char *argv[]) {
+    /*
     if (argc != 3) {
       fprintf(stderr, "Invalid number of arguments\n");
       return 1;
@@ -15,6 +18,9 @@ int main(int argc, char *argv[]) {
 
     FILE * fileArboles = fopen(argv[1], "r");
     FILE * fileBarrios = fopen(argv[2], "r");
+     */
+    FILE * fileArboles = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/arbolesBUE.csv", "r");
+    FILE * fileBarrios = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/barriosBUE.csv", "r");
     FILE *q1, *q2, *q3;
 
     if(fileBarrios == NULL || fileArboles == NULL)
@@ -24,8 +30,8 @@ int main(int argc, char *argv[]) {
     }
 
     barriosADT barrios = newBarrioList();
-    //Leo archivo de barrios
     char line[MAX_LEN];
+    //Leo archivo de barrios
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
@@ -40,7 +46,7 @@ int main(int argc, char *argv[]) {
         int habitantes = atoi(token);
         addBarrio(barrios, nombre, habitantes);
     }
-
+    
     //Leo archivo de arboles
     arbolesADT arboles = newArbolList();
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
@@ -73,10 +79,10 @@ int main(int argc, char *argv[]) {
             }
             index++;
         }
-        addArbol(arboles, comuna, nombre, diametro);
         incArbolesBarrio(barrios, comuna);
+        addArbol(arboles, comuna, nombre, diametro);
      }
-
+    /*
     //Abro archivos de query para escribirlos
     q1 = fopen("query1.csv", "w");
     fprintf(q1, "BARRIO;ARBOLES\n");
@@ -84,24 +90,32 @@ int main(int argc, char *argv[]) {
     fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
     q3 = fopen("query3.csv", "w");
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
-
-
+     */
+    q1 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query1BUE.csv", "w");
+    fprintf(q1, "BARRIO;ARBOLES\n");
+    q2 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query2BUE.csv", "w");
+    fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
+    q3 = fopen("/Users/milu/Desktop/Facultad/2020 1C/PI/TP Final/query3BUE.csv", "w");
+    fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
+/*
     toBeginBarrio(barrios);
     while (hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
-    }
-    
-    //qsort
-    
-    toBeginBarrio(barrios);
-    while(hasNextBarrio(barrios)){
-        fprintf(q2, "%s;%.2f\n", nextNombreBarrio(barrios), nextPromedioArbHab(barrios));
+        printf("%s;%li\n", nextNombreBarrio(barrios), nextCantArb(barrios));
     }
 
+    TBarrioAux * new = toArray(barrios);
+    size_t dimArray = sizeBarrio(barrios);
+    qsort(new, dimArray, sizeof(TBarrioAux), compare);
+
+    for (int i = 0; i < dimArray; i++)
+        printf("%s;%.2f\n", new[i].nombre, new[i].promedioArbHab);
+    */
     toBeginArbol(arboles);
+    printf("%d\n", hasNextArbol(arboles));
     while (hasNextArbol(arboles)) {
-        fprintf(q3, "%s;%.2f\n", nextNombreArbol(arboles), nextDiametro(arboles));
+        printf("%s;%.2f\n", nextNombreArbol(arboles), nextDiametro(arboles));
     }
+
 
     freeArboles(arboles);
     freeBarrios(barrios);
@@ -112,4 +126,14 @@ int main(int argc, char *argv[]) {
     fclose(q2);
     fclose(q3);
 }
+
+int compare (const void * aux1,const void * aux2){
+    TBarrioAux *ia = (TBarrioAux *)aux1;
+    TBarrioAux *ib = (TBarrioAux *)aux2;
+    double comp = ia->promedioArbHab - ib->promedioArbHab;
+    if (comp < EPSILON && comp >= 0)
+        return strcmp(ia->nombre, ib->nombre);
+    return comp;
+}
+
 
