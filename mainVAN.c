@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Can't open file.\n");
         return 1;
     }
-    //Se lee el csv de barrios y se crea una lista de barrios
+
     barriosADT barrios = newBarrioList();
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -43,7 +43,6 @@ int main(int argc, char *argv[]) {
         addBarrio(barrios, nombre, habitantes);
     }
 
-    //Se lee el csv de árboles y se crea una lista de árboles. A su vez, se actualiza la cantidad de árboles por cada barrio de la lista de barrios.
     arbolesADT arboles = newArbolList();
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]) {
         int diametro;
         for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
-            if (index == 2){
+            if (index == 12){
                 comuna = malloc(strlen(token)+1);
                 if (comuna == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
                 }
                 strcpy(comuna, token);
             }
-            else if (index == 7){
+            else if (index == 6){
                 nombre = malloc(strlen(token)+1);
                 if (nombre == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
@@ -70,7 +69,7 @@ int main(int argc, char *argv[]) {
                 }
                 strcpy(nombre, token);
             }
-            else if (index == 11){
+            else if (index == 15){
                 diametro = atoi(token);
             }
             index++;
@@ -79,45 +78,46 @@ int main(int argc, char *argv[]) {
         addArbol(arboles, comuna, nombre, diametro);
      }
 
-    //Abro archivos de query para escribirlos
-    q1 = fopen("query1BUE.csv", "w");
-    fprintf(q1, "BARRIO;ARBOLES\n");
-    q2 = fopen("query2BUE.csv", "w");
-    fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
-    q3 = fopen("query3BUE.csv", "w");
-    fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
+     //Abro archivos de query para escribirlos
+     q1 = fopen("query1VAN.csv", "w");
+     fprintf(q1, "BARRIO;ARBOLES\n");
+     q2 = fopen("query2VAN.csv", "w");
+     fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
+     q3 = fopen("query3VAN.csv", "w");
+     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
 
-    //Almaceno en query1BUE.csv
-    toBeginBarrio(barrios);
-    while (hasNextBarrio(barrios)) {
-        fprintf(q1, "%s;%li\n", nombreBarrio(barrios), nextCantArb(barrios));
-    }
+     //Almaceno en query1VAN.csv
+     toBeginBarrio(barrios);
+     while (hasNextBarrio(barrios)) {
+         fprintf(q1, "%s;%li\n", nombreBarrio(barrios), nextCantArb(barrios));
+     }
 
-    //Paso la lista de barrios a un arreglo para poder usar qsort y ordenar la lista en base a cantidad de árboles por habitante
-    TBarrioAux * new = toArray(barrios);
-    size_t dimArray = sizeBarrio(barrios);
-    qsort(new, dimArray, sizeof(TBarrioAux), compare);
-    //Almaceno en query2BUE.csv
-    for (int i = 0; i < dimArray; i++)
-        fprintf(q2, "%s;%.2f\n", new[i].nombre, new[i].promedioArbHab);
+     //Paso la lista de barrios a un arreglo para poder usar qsort y ordenar la lista en base a cantidad de árboles por habitante
+     TBarrioAux * new = toArray(barrios);
+     size_t dimArray = sizeBarrio(barrios);
+     qsort(new, dimArray, sizeof(TBarrioAux), compare);
 
-    //ALmaceno en query3BUE.csv
-    toBeginArbol(arboles);
-    printf("%d\n", hasNextArbol(arboles));
-    while (hasNextArbol(arboles)) {
-        fprintf(q3, "%s;%.2f\n", nombreArbol(arboles), nextDiametro(arboles));
-    }
+     //Almaceno en query2VAN.csv
+     for (int i = 0; i < dimArray; i++)
+         fprintf(q2, "%s;%.2f\n", new[i].nombre, new[i].promedioArbHab);
 
-    //Libero la memoria utilizada por ambas listas.
-    freeArboles(arboles);
-    freeBarrios(barrios);
+     //ALmaceno en query3VAN.csv
+     toBeginArbol(arboles);
+     printf("%d\n", hasNextArbol(arboles));
+     while (hasNextArbol(arboles)) {
+         fprintf(q3, "%s;%.2f\n", nombreArbol(arboles), nextDiametro(arboles));
+     }
 
-    //Cierro todos los archivos.
-    fclose(fileArboles);
-    fclose(fileBarrios);
-    fclose(q1);
-    fclose(q2);
-    fclose(q3);
+     //Libero la memoria utilizada por ambas listas.
+     freeArboles(arboles);
+     freeBarrios(barrios);
 
-    return 0;
-}
+     //Cierro todos los archivos.
+     fclose(fileArboles);
+     fclose(fileBarrios);
+     fclose(q1);
+     fclose(q2);
+     fclose(q3);
+
+     return 0;
+ }
