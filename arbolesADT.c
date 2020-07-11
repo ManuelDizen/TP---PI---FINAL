@@ -26,7 +26,6 @@ arbolesADT newArbolList(void){
 
 //Agrega el nodoAUbicar a la lista descendentemente por promedio de diametro. Si son iguales (menor a EPSILON ya que redondeamos a 2 decimales), lo agrega alfabéticamente
 static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * ok){
-<<<<<<< HEAD
     if(first == NULL){
         first = nodoAUbicar;
         first->next = NULL;
@@ -47,29 +46,6 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
     return first;
 }
 
-=======
-  if(first == NULL){
-      first = nodoAUbicar;
-      first->next = NULL;
-      return first;
-  }
-  double comp1;
-    int comp2;
-    if((comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0 || (comp1 < EPSILON && (comp2  = strcmp(first->nombre, nodoAUbicar->nombre)) > 0) ){
-      nodoAUbicar->next = first;
-      return nodoAUbicar;
-  }
-  if(comp1 < EPSILON && comp2 <= 0){
-      nodoAUbicar->next = first->next;
-      return first;
-  }
-  *ok = 1; // si ok vale 1, no es la primer llamada
-  first->next = ubicaPorDiam(first->next, nodoAUbicar, ok);
-  return first;
-}
-
-//crea un nuevo nodo
->>>>>>> 914040955220a6b24bc8df90112b2bccdad93a20
 static TArboles * creaNodo (const char * nombre, long int diametro){
     TArboles * aux = malloc(sizeof(TArboles));
     if(aux == NULL){
@@ -131,11 +107,7 @@ static TArboles * getArbol(TArboles * first, const char * nombre, long int diame
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     if (arboles != NULL){
         int ok = 0;
-<<<<<<< HEAD
         TArboles * nodoAUbicar = getArbol(arboles->firstArbol, nombre, diametro);
-=======
-        arboles->firstArbol = getArbol(arboles->firstArbol, nombre, diametro);
->>>>>>> 914040955220a6b24bc8df90112b2bccdad93a20
         arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar, &ok);
         if (!ok)
             arboles->firstArbol = nodoAUbicar;
