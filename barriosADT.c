@@ -65,37 +65,56 @@ void addBarrio(barriosADT barrios, const char * nombre, long int cant_hab){
 static TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int * primero){
     if(first == NULL){
         first = barrioAUbicar;
+        first->next = NULL;
         return first;
     }
     long int comp1 = barrioAUbicar->cant_arboles - first->cant_arboles;
-    if(comp1 < 0 || (comp1 < EPSILON && strcmp(barrioAUbicar->nombre, first->nombre) < 0)){
+    int comp2;
+    if((comp1 =  first->cant_arboles - barrioAUbicar->cant_arboles) < 0 || (comp1 < EPSILON && (comp2 = strcmp(first->nombre, barrioAUbicar->nombre)) > 0)){
         barrioAUbicar->next = first;
         return barrioAUbicar;
+    }
+    if (comp1 < EPSILON && comp2 <= 0){
+        barrioAUbicar->next = first->next;
+        return first;
     }
     *primero = 1;
     first->next = ubicaBarriosPorTotal(first->next, barrioAUbicar, primero);
     return first;
 }
 
-//Encuentra el barrio. Si lo encuentra, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no lo encuentra, devuelve NULL.
-static void incArbolesBarrioRec(barriosADT barrios, TBarrios * first, TBarrios * barrioAUbicar, const char * nombre){
-    TBarrios * aux = first;
-    while (aux != NULL && strcmp(aux->nombre, nombre) != 0)
-        aux = aux->next;
-    if (aux != NULL){
+//Encuentra el barrio. Si lo encuentra, actualiza los parámetros, lo remueve de la lista y lo devuelve.
+static TBarrios * getAndIncBarrioRec(TBarrios * first, const char * nombre, int * ok){
+    if (first->next == NULL)
+        return NULL;
+    if (strcmp(first->next->nombre, nombre) == 0){
+        TBarrios * aux = first->next;
         aux->cant_arboles++;
         aux->arbol_habitante_promedio = (double)aux->cant_arboles / aux->cant_habitantes;
-        TBarrios * barrioAUbicar = aux;
-        aux = aux->next;
+        first->next = aux->next;
         *ok = 1;
-        return barrioAUbicar;
+        return aux;
     }
-    return NULL;
+    return getAndIncBarrioRec(first->next, nombre, ok);
+}
+
+static TBarrios * getAndIncBarrio(TBarrios * first, const char * nombre, int * ok){
+    if (first == NULL)
+        return NULL;
+    if (first->next == NULL && strcmp(first->nombre, nombre) == 0){
+        TBarrios * aux = first;
+        aux->cant_arboles++;
+        aux->arbol_habitante_promedio = (double)aux->cant_arboles / aux->cant_habitantes;
+        first = NULL;
+        *ok = 1;
+        return aux;
+    }
+    return getAndIncBarrioRec(first, nombre, ok);
 }
 
 void incArbolesBarrio (barriosADT barrios, const char * nombre){
     int ok = 0, primero = 0;
-    TBarrios * barrioAUbicar = incArbolesBarrioRec(barrios->firstBarrio, nombre, &ok);
+    TBarrios * barrioAUbicar = getAndIncBarrio(barrios->firstBarrio, nombre, &ok);
     if (ok) //si no encontró el barrio, no hace nada
         barrios->firstBarrio = ubicaBarriosPorTotal(barrios->firstBarrio, barrioAUbicar, &primero);
     if (primero)  //si lo inserté al principio
