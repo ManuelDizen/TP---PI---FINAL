@@ -68,14 +68,16 @@ static TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbica
         first->next = NULL;
         return first;
     }
-    long int comp1 = barrioAUbicar->cant_arboles - first->cant_arboles;
+    long int comp1;
     int comp2;
-    if((comp1 =  first->cant_arboles - barrioAUbicar->cant_arboles) < 0 || (comp1 < EPSILON && (comp2 = strcmp(first->nombre, barrioAUbicar->nombre)) > 0)){
+    if((comp1 =  first->cant_arboles - barrioAUbicar->cant_arboles) < 0 || (comp1 == 0 && (comp2 = strcmp(first->nombre, barrioAUbicar->nombre)) > 0)){
         barrioAUbicar->next = first;
         return barrioAUbicar;
     }
-    if (comp1 < EPSILON && comp2 <= 0){
+     if (comp1 == 0 && comp2 <= 0){
         barrioAUbicar->next = first->next;
+        first->next = barrioAUbicar;
+        *primero = 1;
         return first;
     }
     *primero = 1;
@@ -113,11 +115,17 @@ static TBarrios * getAndIncBarrio(TBarrios * first, const char * nombre, int * o
 }
 
 void incArbolesBarrio (barriosADT barrios, const char * nombre){
+    //Si el barrio es el primero de la lista, solamente actualizo los datos, no necesito reubicarlo
+    if (strcmp(barrios->firstBarrio->nombre, nombre) == 0){
+        barrios->firstBarrio->cant_arboles++;
+        barrios->firstBarrio->arbol_habitante_promedio = (double)barrios->firstBarrio->cant_arboles / barrios->firstBarrio->cant_habitantes;
+        return;
+    }
     int ok = 0, primero = 0;
     TBarrios * barrioAUbicar = getAndIncBarrio(barrios->firstBarrio, nombre, &ok);
     if (ok) //si no encontró el barrio, no hace nada
         barrios->firstBarrio = ubicaBarriosPorTotal(barrios->firstBarrio, barrioAUbicar, &primero);
-    if (primero)  //si lo inserté al principio
+    if (!primero)  //si lo inserté al principio
         barrios->firstBarrio = barrioAUbicar;
 }
 
