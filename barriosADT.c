@@ -61,7 +61,7 @@ void addBarrio(barriosADT barrios, const char * nombre, long int cant_hab){
     }
 }
 
-//Agrega el barrioAUbicar a la lista descendentemente por cantidad de árboles. Si son iguales, lo inserta alfabéticamente 
+//Agrega el barrioAUbicar a la lista descendentemente por cantidad de árboles. Si son iguales, lo inserta alfabéticamente
 static TBarrios * ubicaBarriosPorTotal(TBarrios * first, TBarrios * barrioAUbicar, int * primero){
     if(first == NULL){
         first = barrioAUbicar;
