@@ -31,9 +31,9 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
       first->next = NULL;
       return first;
   }
-  double comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio;
-  int comp2 = strcmp(first->nombre, nodoAUbicar->nombre);
-  if(comp1 < 0 || (comp1 < EPSILON && comp2 > 0) ){
+  double comp1;
+    int comp2;
+    if((comp1 = first->diametro_promedio - nodoAUbicar->diametro_promedio) < 0 || (comp1 < EPSILON && (comp2  = strcmp(first->nombre, nodoAUbicar->nombre)) > 0) ){
       nodoAUbicar->next = first;
       return nodoAUbicar;
   }
@@ -46,40 +46,69 @@ static TArboles * ubicaPorDiam(TArboles * first, TArboles * nodoAUbicar, int * o
   return first;
 }
 
-//Encuentra el nodo el cual quiero insertar. Si ya existe, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no existe, lo crea y lo devuelve
-TArboles * encuentraNodo(TArboles * first, const char * nombre, int diametro, TArboles * nodoAUbicar){
-  if(first == NULL){
-    nodoAUbicar = malloc(sizeof(TArboles));
-    if(nodoAUbicar == NULL){
+//crea un nuevo nodo
+static TArboles * creaNodo (const char * nombre, long int diametro){
+    TArboles * aux = malloc(sizeof(TArboles));
+    if(aux == NULL){
       fprintf(stderr, "There's not enough memory available for allocation");
       return NULL;
     }
-    nodoAUbicar->nombre = malloc(strlen(nombre)+1);
-    if (nodoAUbicar->nombre == NULL){
-        fprintf(stderr, "There's not enough memory available for allocation");
-        return NULL;
+    aux->nombre = malloc(strlen(nombre)+1);
+    if(aux->nombre == NULL){
+      fprintf(stderr, "There's not enough memory available for allocation");
+      return NULL;
     }
-    strcpy(nodoAUbicar->nombre, nombre);
-    nodoAUbicar->diametro_total = nodoAUbicar->diametro_promedio = diametro;
-    nodoAUbicar->cantidad_arboles = 1;
-    nodoAUbicar->next = NULL;
-    return first;
-  }
-  if(strcmp(first->nombre, nombre) == 0){
-    nodoAUbicar = first;
-    first = first->next;
-    nodoAUbicar->diametro_promedio = ((double)(first->diametro_total += diametro) / (double)(++first->cantidad_arboles));
-    nodoAUbicar->next = NULL;
-    return first;
-  }
-  first->next = encuentraNodo(first->next, nombre, diametro, nodoAUbicar);
-  return first;
+    strcpy(aux->nombre, nombre);
+    aux->cantidad_arboles = 1;
+    aux->diametro_promedio = diametro;
+    aux->next = NULL;
+    return aux;
+}
+
+static TArboles * getArbolRec(TArboles * first, const char * nombre, long int diametro){
+    if (first->next == NULL){
+        TArboles * new = malloc(sizeof(TArboles));
+        if(new == NULL){
+          fprintf(stderr, "There's not enough memory available for allocation");
+          return NULL;
+        }
+        new = creaNodo(nombre, diametro);
+        return new;
+    }
+    if (strcmp(first->next->nombre, nombre) == 0){
+        TArboles * aux = first->next;
+        //Fórmula de promedio iterativo
+        aux->diametro_promedio += (1/(1+1.0*aux->cantidad_arboles))*(diametro - aux->diametro_promedio);
+        first->next = aux->next;
+        return aux;
+    }
+    return getArbolRec(first->next, nombre, diametro);
+}
+
+//Encuentra el nodo el cual quiero insertar. Si ya existe, actualiza los parámetros, lo remueve de la lista y lo devuelve. Si no existe, lo crea y lo devuelve
+static TArboles * getArbol(TArboles * first, const char * nombre, long int diametro){
+    if (first == NULL){
+        TArboles * aux = malloc(sizeof(TArboles));
+        if(aux == NULL){
+          fprintf(stderr, "There's not enough memory available for allocation");
+          return NULL;
+        }
+        aux = creaNodo(nombre, diametro);
+        return aux;
+    }
+    if (first->next == NULL && strcmp(first->nombre, nombre) == 0){
+        TArboles * aux = first;
+        aux->diametro_promedio += (1/(1+1.0*aux->cantidad_arboles))*(diametro - aux->diametro_promedio);
+        first = NULL;
+        return aux;
+    }
+    return getArbolRec(first, nombre, diametro);
 }
 
 void addArbol(arbolesADT arboles, const char * comuna, const char * nombre, long int diametro){
     if (arboles != NULL){
         int ok = 0;
-        arboles->firstArbol = encuentraNodo(arboles->firstArbol, nombre, diametro);
+        arboles->firstArbol = getArbol(arboles->firstArbol, nombre, diametro);
         arboles->firstArbol = ubicaPorDiam(arboles->firstArbol, nodoAUbicar, &ok);
         if (!ok)
             arboles->firstArbol = nodoAUbicar;
