@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include "arbolesADT.h"
 #include "barriosADT.h"
 #define EPSILON 0.01
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
     toBeginArbol(arboles);
     printf("%d\n", hasNextArbol(arboles));
     while (hasNextArbol(arboles)) {
-        printf("%s;%.2f\n", nombreArbol(arboles), nextDiametro(arboles));
+        fprintf(q3, "%s;%.2f\n", nombreArbol(arboles), nextDiametro(arboles));
     }
 
     //Libero la memoria utilizada por ambas listas.
@@ -129,9 +130,11 @@ int compare (const void * aux1,const void * aux2){
     TBarrioAux *barrio1 = (TBarrioAux *)aux1;
     TBarrioAux *barrio2 = (TBarrioAux *)aux2;
     double comp = barrio1->promedioArbHab - barrio2->promedioArbHab;
-    if (comp < EPSILON && comp >= 0)
+    if (fabs(comp) < EPSILON)
         return strcmp(barrio1->nombre, barrio2->nombre);
-    return comp;
+    if (comp > 0)
+        return -1;
+    return 1;
 }
 
 
