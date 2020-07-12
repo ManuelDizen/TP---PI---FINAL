@@ -6,6 +6,7 @@
 #include <math.h>
 #define EPSILON 0.01
 
+
 typedef struct barriosCDT * barriosADT;
 
 //Estructura auxiliar para pasar a un arreglo sólo los campos que necesito y luego utilizara en qsort
@@ -15,7 +16,7 @@ typedef struct TBarrioAux{
 } TBarrioAux;
 
 //Sortea los elementos para el 2do query
-int compare (const void * aux1,const void * aux2){
+static int compare (const void * aux1,const void * aux2){
     TBarrioAux *barrio1 = (TBarrioAux *)aux1;
     TBarrioAux *barrio2 = (TBarrioAux *)aux2;
     double comp = barrio1->promedioArbHab - barrio2->promedioArbHab;
