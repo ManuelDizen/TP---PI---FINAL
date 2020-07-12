@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-   barriosADT barrios = newBarrios();
+   barriosADT barrios = nuevoBarrio();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     //Leo archivo de arboles
-    arbolesADT arboles = newArboles();
+    arbolesADT arboles = nuevoArbol();
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
