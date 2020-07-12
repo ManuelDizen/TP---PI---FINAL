@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     AuxStruct cant_arboles[sizeBarrio(barrios)];
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
-        cant_arboles[i].nombre_auxiliar = nombreBarrio(barrios, i));
+        cant_arboles[i].nombre_auxiliar =  nombreBarrio(barrios, i);
         cant_arboles[i].valor_auxiliar = cantArb(barrios, i);
     }
     qsort(cant_arboles, sizeBarrio(barrios), sizeof(AuxStruct), sortCantArboles);
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
-        cant_arboles[i].nombre_auxiliar = nombreBarrio(barrios, i));
+        cant_arboles[i].nombre_auxiliar = nombreBarrio(barrios, i);
         cant_arboles[i].valor_auxiliar = TruncNumber(promedioArbHab(barrios, i), DECIMAL);
     }
 
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     
     AuxStruct diametroArbol[sizeArboles(arboles)];
     for (size_t i = 0; i < sizeArboles(arboles); i++){
-        diametroArbol[i].nombre_auxiliar =  nombreArbol(arboles, i));
+        diametroArbol[i].nombre_auxiliar = nombreArbol(arboles, i);
         diametroArbol[i].valor_auxiliar = TruncNumber(promedioDiam(arboles, i), DECIMAL);
     }
     
@@ -184,8 +184,6 @@ double TruncNumber (double num1, int digits){
     int numerador = num1*potencia;
     return numerador/(1.0*potencia);
 }
-
-
 
 
 
