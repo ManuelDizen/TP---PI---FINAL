@@ -16,7 +16,7 @@ typedef struct barriosCDT{
     size_t sizeBarrios;
 } barriosCDT;
 
-barriosADT newBarrios(void){
+barriosADT nuevoBarrio(void){
     return calloc(1, sizeof(barriosCDT));
 }
 
