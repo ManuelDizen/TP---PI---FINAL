@@ -2,6 +2,9 @@
 #define barriosADT_h
 
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
+#define EPSILON 0.01
 
 typedef struct barriosCDT * barriosADT;
 
