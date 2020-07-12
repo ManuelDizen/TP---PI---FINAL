@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     AuxStruct cant_arboles[sizeBarrio(barrios)];
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         cant_arboles[i].nombre_auxiliar =  malloc(strlen(nombreBarrio(barrios, i)+1));
-        if (cant_arboles[i].nombre_auxilia == NULL){
+        if (cant_arboles[i].nombre_auxiliar == NULL){
             fprintf(stderr, "There's not enough memory available for allocation");
             return 1;
         }
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         cant_arboles[i].nombre_auxiliar =  malloc(strlen(nombreBarrio(barrios, i)+1));
-        if (cant_arboles[i].nombre_auxilia == NULL){
+        if (cant_arboles[i].nombre_auxiliar == NULL){
             fprintf(stderr, "There's not enough memory available for allocation");
             return 1;
         }
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
     AuxStruct diametroArbol[sizeArboles(arboles)];
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         diametroArbol[i].nombre_auxiliar =  malloc(strlen(nombreArbol(arboles, i)+1));
-        if (diametroArbol[i].nombre_auxilia == NULL){
+        if (diametroArbol[i].nombre_auxiliar == NULL){
             fprintf(stderr, "There's not enough memory available for allocation");
             return 1;
         }
