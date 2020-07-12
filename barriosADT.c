@@ -62,7 +62,7 @@ void addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
 
 void freeBarrios(barriosADT barrios){
     for (int i = 0; i < sizeBarrio(barrios); i++)
-    free(barrios->barrios[i].nombre);
+        free(barrios->barrios[i].nombre);
     free(barrios->barrios);
     free(barrios);
 }
