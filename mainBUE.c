@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     //Leo archivo de arboles
-    arbolesADT arboles = newArboles();
+    arbolesADT arboles = nuevoArbol();
     fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
