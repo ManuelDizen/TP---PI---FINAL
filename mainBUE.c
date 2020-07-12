@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-   barriosADT barrios = newBarrios();
+   barriosADT barrios = nuevoBarrio();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
