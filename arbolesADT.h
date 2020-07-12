@@ -1,7 +1,7 @@
 
 
-#ifndef pruebaarbolesADT_h
-#define pruebaarbolesADT_h
+#ifndef arbolesADT_h
+#define arbolesADT_h
 
 #include <stdio.h>
 
@@ -15,4 +15,4 @@ double promedioDiam (arbolesADT arboles, size_t index);
 void freeArboles(arbolesADT arboles);
 
 
-#endif /* pruebaarbolesADT_h */
+#endif /* arbolesADT_h */
