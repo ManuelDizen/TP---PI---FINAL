@@ -117,8 +117,8 @@ int main(int argc, char *argv[]) {
             
     AuxStruct diametroArbol[sizeArboles(arboles)];
     for (size_t i = 0; i < sizeArboles(arboles); i++){
-        query3[i].nombre_auxiliar = nombreArbol(arboles, i);
-        query3[i].valor_auxiliar = TruncNumber(promedioDiam(arboles, i), DECIMAL);
+        diametroArbol[i].nombre_auxiliar = nombreArbol(arboles, i);
+        diametroArbol[i].valor_auxiliar = TruncNumber(promedioDiam(arboles, i), DECIMAL);
     }
             
     qsort(diametroArbol, sizeArboles(arboles), sizeof(AuxStruct), sortPromedioDiamArb);
