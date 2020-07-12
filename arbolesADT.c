@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define EPSILON 0.01
 
 typedef struct TArboles {
     char * nombre;
