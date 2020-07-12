@@ -7,7 +7,7 @@
 
 typedef struct barriosCDT * barriosADT;
 
-barriosADT newBarrios(void);
+barriosADT nuevoBarrio(void);
 void addBarrio (barriosADT barrios, char * nombre, long int cant_hab);
 void incArbolBarrio(barriosADT barrios, char * nombre);
 size_t sizeBarrio (barriosADT barrios);

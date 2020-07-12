@@ -7,7 +7,7 @@
 
 typedef struct arbolesCDT * arbolesADT;
 
-arbolesADT newArboles(void);
+arbolesADT nuevoArbol(void);
 void addArbol (arbolesADT arboles, char * nombre, long int diametro);
 size_t sizeArboles (arbolesADT arboles);
 char * nombreArbol (arbolesADT arboles, size_t index);
