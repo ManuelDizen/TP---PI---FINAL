@@ -63,3 +63,6 @@ char * nombreArbol (arbolesADT arboles, size_t index){
 double promedioDiam (arbolesADT arboles, size_t index){
     return arboles->arboles[index].diametro_promedio;
 }
+
+ 
+
