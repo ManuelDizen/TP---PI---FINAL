@@ -34,7 +34,6 @@ void addArbol (arbolesADT arboles, char * nombre, long int diametro){
             arboles->arboles[i].cantidad_arboles++;
             arboles->arboles[i].diametro_total += diametro;
             arboles->arboles[i].diametro_promedio = arboles->arboles[i].diametro_total / arboles->arboles[i].cantidad_arboles;
-            arboles->arboles[i].cantidad_arboles++;
             return;
         }
     }
