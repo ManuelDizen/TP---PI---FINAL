@@ -17,7 +17,7 @@ typedef struct arbolesCDT{
     size_t sizeArboles;
 } arbolesCDT;
 
-arbolesADT newArboles(void){
+arbolesADT nuevoArbol(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
