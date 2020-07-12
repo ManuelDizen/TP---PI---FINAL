@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -18,23 +19,24 @@ int sortQ1 (const void * aux1, const void * aux2);
 int sortQ2 (const void * aux1,const void * aux2);
 int sortQ3 (const void * aux1,const void * aux2);
 
+
 int main(int argc, char *argv[]) {
     
     if (argc != 3) {
       fprintf(stderr, "Invalid number of arguments\n");
       return 1;
     }
+ 
     FILE * fileArboles = fopen(argv[1], "r");
     FILE * fileBarrios = fopen(argv[2], "r");
     FILE *q1, *q2, *q3;
 
-    if(fileBarrios == NULL || fileArboles == NULL)
-    {
+    if(fileBarrios == NULL || fileArboles == NULL){
         fprintf(stderr, "Can't open file.\n");
         return 1;
     }
 
-    barriosADT barrios = nuevoBarrio();
+   barriosADT barrios = nuevoBarrio();
     //Leo archivo de barrios
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
@@ -63,7 +65,7 @@ int main(int argc, char *argv[]) {
         int diametro;
         for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
-            if (index == 12){
+            if (index == 2){
                 barrio = malloc(strlen(token)+1);
                 if (barrio == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
@@ -71,7 +73,7 @@ int main(int argc, char *argv[]) {
                 }
                 strcpy(barrio, token);
             }
-            else if (index == 6){
+            else if (index == 7){
                 nombre = malloc(strlen(token)+1);
                 if (nombre == NULL){
                     fprintf(stderr, "There's not enough memory available for allocation");
@@ -79,23 +81,24 @@ int main(int argc, char *argv[]) {
                 }
                 strcpy(nombre, token);
             }
-            else if (index == 15){
+            else if (index == 11){
                 diametro = atoi(token);
             }
             index++;
         }
         addArbol(arboles, nombre, diametro);
         incArbolBarrio(barrios, barrio);
-    }
+     }
+
 
     //Abro archivos de query para escribirlos
-    q1 = fopen("query1VAN.csv", "wt");
+    q1 = fopen("query1BUE.csv", "wt");
     fprintf(q1, "BARRIO;ARBOLES\n");
-    q2 = fopen("query2VAN.csv", "wt");
+    q2 = fopen("query2BUE.csv", "wt");
     fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
-    q3 = fopen("query3VAN.csv", "wt");
+    q3 = fopen("query3VEC.csv", "wt");
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
-    
+
     AuxStruct query1[sizeBarrio(barrios)];
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         query1[i].nombre =  nombreBarrio(barrios, i);
@@ -115,13 +118,13 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         fprintf(q2, "%s;%.2f\n", query1[i].nombre, query1[i].cant_arboles);
     }
-            
+    
     AuxStruct query3[sizeArboles(arboles)];
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         query3[i].nombre = nombreArbol(arboles, i);
         query3[i].cant_arboles = promedioDiam(arboles, i);
     }
-            
+    
     qsort(query3, sizeArboles(arboles), sizeof(AuxStruct), sortQ3);
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         fprintf(q3, "%s;%.2f\n", query3[i].nombre, query3[i].cant_arboles);
@@ -135,7 +138,7 @@ int main(int argc, char *argv[]) {
     freeArboles(arboles);
     freeBarrios(barrios);
 }
-  
+
 int sortQ1 (const void * aux1, const void * aux2){
     AuxStruct *barrio1 = (AuxStruct *)aux1;
     AuxStruct *barrio2 = (AuxStruct *)aux2;
@@ -180,5 +183,6 @@ double TruncNumber (double num1, int digits){
     int numerador = num1*potencia;
     return numerador/(1.0*potencia);
 }
+
 
 
