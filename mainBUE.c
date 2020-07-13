@@ -149,10 +149,18 @@ int sortCantArboles (const void * aux1, const void * aux2){
     int num1 = barrio1->valor_auxiliar;
     int num2 = barrio2->valor_auxiliar;
     int comp = num1 - num2;
-    if (comp == 0)
+    if (comp == 0){
+        free(barrio1);
+        free(barrio2);
         return strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
-    if (comp > 0)
+    }
+    if (comp > 0){
+        free(barrio1);
+        free(barrio2);
         return -1;
+    }
+    free(barrio1);
+    free(barrio2);
     return 1;
 }
 
@@ -162,10 +170,18 @@ int sortPromedioArbHab (const void * aux1,const void * aux2){
     double num1 = barrio1->valor_auxiliar;
     double num2 = barrio2->valor_auxiliar;
     double comp = num1 - num2;
-    if (comp == 0)
+    if (comp == 0){
+        free(barrio1);
+        free(barrio2);
         return strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
-    if (comp > 0)
+    }
+    if (comp > 0){
+        free(barrio1);
+        free(barrio2);
         return -1;
+    }
+    free(barrio1);
+    free(barrio2);
     return 1;
 }
 
@@ -175,10 +191,18 @@ int sortPromedioDiamArb (const void * aux1,const void * aux2){
     double num1 = arbol1->valor_auxiliar;
     double num2 = arbol2->valor_auxiliar;
     double comp = num1 - num2;
-    if (comp == 0)
+    if (comp == 0){
+        free(arbol1);
+        free(arbol2);
         return strcmp(arbol1->nombre_auxiliar, arbol2->nombre_auxiliar);
-    if (comp > 0)
+    }
+    if (comp > 0){
+        free(arbol1);
+        free(arbol2);
         return -1;
+    }
+    free(arbol1);
+    free(arbol2);
     return 1;
 }
 
