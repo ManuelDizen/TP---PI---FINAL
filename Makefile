@@ -6,10 +6,12 @@ CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lm -ldl
 all: arbolesBUEADT arbolesVANADT
 
 arbolesBUEADT: mainBUE.c arbolesADT.c barriosADT.c
-	$(CC) -o arbolesBUEADT mainBUE.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -c mainBUE.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -o arbolesBUEADT mainBUE.o arbolesADT.o barriosADT.o 
 
 arbolesVANADT: mainVAN.c arbolesADT.c barriosADT.c
-	$(CC) -o arbolesVANADT mainVAN.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -c mainVAN.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -o arbolesVANADT mainVAN.o arbolesADT.o barriosADT.o $(CFLAGS)
 
 
 
