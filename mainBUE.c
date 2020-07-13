@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,6 +7,9 @@
 
 #define MAX_LEN 2048
 #define DECIMAL 2
+#define BARRIO 2
+#define ESPECIE 7
+#define DIAMETRO 11
 
 typedef struct AuxStruct{
     char * nombre_auxiliar;
@@ -33,6 +35,10 @@ int main(int argc, char *argv[]) {
 
     if(fileBarrios == NULL || fileArboles == NULL){
         fprintf(stderr, "Can't open file.\n");
+        if (fileBarrios == NULL)
+            fclose(fileArboles);
+        else
+            fclose(fileBarrios);
         return 1;
     }
 
@@ -43,16 +49,10 @@ int main(int argc, char *argv[]) {
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
-        char * nombre = malloc(strlen(token)+1);
-        if (nombre == NULL){
-            fprintf(stderr, "There's not enough memory available for allocation");
-            return 1;
-        }
-        strcpy(nombre,token);
+        char * nombre = token;
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
         addBarrio(barrios, nombre, habitantes);
-        free(nombre);
     }
 
     //Leo archivo de arboles
@@ -61,36 +61,21 @@ int main(int argc, char *argv[]) {
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
         char * barrio;
-        char * nombre;
+        char * especie;
         int index = 0;
         int diametro;
         for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
-            if (index == 2){
-                barrio = malloc(strlen(token)+1);
-                if (barrio == NULL){
-                    fprintf(stderr, "There's not enough memory available for allocation");
-                    return 1;
-                }
-                strcpy(barrio, token);
-            }
-            else if (index == 7){
-                nombre = malloc(strlen(token)+1);
-                if (nombre == NULL){
-                    fprintf(stderr, "There's not enough memory available for allocation");
-                    return 1;
-                }
-                strcpy(nombre, token);
-            }
-            else if (index == 11){
+            if (index == BARRIO)
+                barrio = token;
+            else if (index == ESPECIE)
+                especie = token;
+            else if (index == DIAMETRO)
                 diametro = atoi(token);
-            }
             index++;
         }
-        addArbol(arboles, nombre, diametro);
+        addArbol(arboles, especie, diametro);
         incArbolBarrio(barrios, barrio);
-        free(nombre);
-        free(barrio);
      }
 
 
@@ -149,19 +134,16 @@ int sortCantArboles (const void * aux1, const void * aux2){
     int num1 = barrio1->valor_auxiliar;
     int num2 = barrio2->valor_auxiliar;
     int comp = num1 - num2;
-    if (comp == 0){
-        free(barrio1);
-        free(barrio2);
-        return strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
-    }
-    if (comp > 0){
-        free(barrio1);
-        free(barrio2);
-        return -1;
-    }
+    int returnValue;
+    if (comp == 0)
+        returnValue = strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
+    else if (comp > 0)
+        returnValue = -1;
+    else
+        returnValue = 1;
     free(barrio1);
     free(barrio2);
-    return 1;
+    return returnValue;
 }
 
 int sortPromedioArbHab (const void * aux1,const void * aux2){
@@ -170,19 +152,16 @@ int sortPromedioArbHab (const void * aux1,const void * aux2){
     double num1 = barrio1->valor_auxiliar;
     double num2 = barrio2->valor_auxiliar;
     double comp = num1 - num2;
-    if (comp == 0){
-        free(barrio1);
-        free(barrio2);
-        return strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
-    }
-    if (comp > 0){
-        free(barrio1);
-        free(barrio2);
-        return -1;
-    }
+    int returnValue;
+    if (comp == 0)
+        returnValue = strcmp(barrio1->nombre_auxiliar, barrio2->nombre_auxiliar);
+    else if (comp > 0)
+        returnValue = -1;
+    else
+        returnValue = 1;
     free(barrio1);
     free(barrio2);
-    return 1;
+    return returnValue;
 }
 
 int sortPromedioDiamArb (const void * aux1,const void * aux2){
@@ -191,19 +170,16 @@ int sortPromedioDiamArb (const void * aux1,const void * aux2){
     double num1 = arbol1->valor_auxiliar;
     double num2 = arbol2->valor_auxiliar;
     double comp = num1 - num2;
-    if (comp == 0){
-        free(arbol1);
-        free(arbol2);
-        return strcmp(arbol1->nombre_auxiliar, arbol2->nombre_auxiliar);
-    }
-    if (comp > 0){
-        free(arbol1);
-        free(arbol2);
-        return -1;
-    }
+    int returnValue;
+    if (comp == 0)
+        returnValue = strcmp(arbol1->nombre_auxiliar, arbol2->nombre_auxiliar);
+    else if (comp > 0)
+        returnValue = -1;
+    else
+        returnValue = 1;
     free(arbol1);
     free(arbol2);
-    return 1;
+    return returnValue;
 }
 
 double TruncNumber (double num1, int digits){
