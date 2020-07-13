@@ -2,6 +2,7 @@
 #include "barriosADT.h"
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 
 typedef struct TBarrios{
@@ -32,8 +33,7 @@ static int findBarrio (TBarrios * barrios, size_t size, char * nombre, int * ind
 
 void incArbolBarrio(barriosADT barrios, char * nombre){
     int index;
-    int ok = findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index);
-    if (ok){
+    if (findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index)){
         barrios->barrios[index].cant_arboles++;
         barrios->barrios[index].arbol_habitante_promedio = (double)barrios->barrios[index].cant_arboles / barrios->barrios[index].cant_habitantes;
     }
@@ -41,17 +41,17 @@ void incArbolBarrio(barriosADT barrios, char * nombre){
 
 void addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
     int index;
-    int ok = findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index);
-    if (ok == 0){
+    errno = 0;
+    if (!findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index)){
         barrios->barrios = realloc(barrios->barrios, (barrios->sizeBarrios +1)*sizeof(TBarrios));
-        if (barrios->barrios == NULL){
+        if (errno == ENOMEM){
             fprintf(stderr, "There's not enough memory available for allocation");
             return;
         }
         barrios->barrios[barrios->sizeBarrios].cant_habitantes = cant_hab;
         barrios->barrios[barrios->sizeBarrios].cant_arboles = barrios->barrios[barrios->sizeBarrios].arbol_habitante_promedio = 0;
         barrios->barrios[barrios->sizeBarrios].nombre = malloc(strlen(nombre)+1);
-        if (barrios->barrios[barrios->sizeBarrios].nombre == NULL){
+        if (errno == ENOMEM){
             fprintf(stderr, "There's not enough memory available for allocation");
             return;
         }
@@ -62,7 +62,7 @@ void addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
 
 void freeBarrios(barriosADT barrios){
     for (int i = 0; i < sizeBarrio(barrios); i++)
-    free(barrios->barrios[i].nombre);
+        free(barrios->barrios[i].nombre);
     free(barrios->barrios);
     free(barrios);
 }
