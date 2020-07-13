@@ -141,8 +141,6 @@ int sortCantArboles (const void * aux1, const void * aux2){
         returnValue = -1;
     else
         returnValue = 1;
-    free(barrio1);
-    free(barrio2);
     return returnValue;
 }
 
@@ -159,8 +157,6 @@ int sortPromedioArbHab (const void * aux1,const void * aux2){
         returnValue = -1;
     else
         returnValue = 1;
-    free(barrio1);
-    free(barrio2);
     return returnValue;
 }
 
@@ -177,8 +173,6 @@ int sortPromedioDiamArb (const void * aux1,const void * aux2){
         returnValue = -1;
     else
         returnValue = 1;
-    free(arbol1);
-    free(arbol2);
     return returnValue;
 }
 
