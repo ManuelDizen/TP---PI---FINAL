@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 typedef struct TArboles {
     char * nombre;
@@ -36,15 +37,16 @@ void addArbol (arbolesADT arboles, char * nombre, long int diametro){
             return;
         }
     }
+    errno = 0;
     arboles->arboles = realloc(arboles->arboles, (arboles->sizeArboles +1)*sizeof(TArboles));
-    if (arboles->arboles == NULL){
+    if (errno == ENOMEM){
         fprintf(stderr, "There's not enough memory available for allocation");
         return;
     }
     arboles->arboles[arboles->sizeArboles].cantidad_arboles = 1;
     arboles->arboles[arboles->sizeArboles].diametro_total = arboles->arboles[arboles->sizeArboles].diametro_promedio = diametro;
     arboles->arboles[arboles->sizeArboles].nombre = malloc(strlen(nombre)+1);
-    if (arboles->arboles[arboles->sizeArboles].nombre == NULL){
+    if (errno == ENOMEM){
         fprintf(stderr, "There's not enough memory available for allocation");
         return;
     }
