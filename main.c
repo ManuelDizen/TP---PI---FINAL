@@ -9,7 +9,7 @@
 #define DECIMAL 2
 
 typedef struct AuxStruct{
-    char * nombre;
+    char * nombre_auxiliar;
     double valor_auxiliar;
 } AuxStruct;
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
         diametroArbol[i].cant_arboles = TruncNumber(promedioDiam(arboles, i), DECIMAL);
     }
     
-    qsort(diametroArbol, sizeArboles(arboles), sizeof(AuxStruct), sortPromedioDiamAr);
+    qsort(diametroArbol, sizeArboles(arboles), sizeof(AuxStruct), sortPromedioDiamArb);
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         fprintf(q3, "%s;%.2f\n", diametroArbol[i].nombre_auxiliar, diametroArbol[i].valor_auxiliar);
     }
