@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
         addBarrio(barrios, nombre, habitantes);
+        free(nombre);
     }
 
     //Leo archivo de arboles
@@ -85,6 +86,8 @@ int main(int argc, char *argv[]) {
         }
         addArbol(arboles, nombre, diametro);
         incArbolBarrio(barrios, barrio);
+        free(nombre);
+        free(barrio);
     }
 
     //Abro archivos de query para escribirlos
