@@ -32,7 +32,14 @@ int main(int argc, char *argv[]) {
     FILE *q1, *q2, *q3;
 
     if(fileBarrios == NULL || fileArboles == NULL){
-        fprintf(stderr, "Can't open file.\n");
+        if (fileBarrios == NULL){
+            fprintf(stderr, "Cannot open %s\n", argv[2]);
+            fclose(fileArboles);
+        }
+        else if (fileArboles == NULL){
+            fprintf(stderr, "Cannot open %s\n", argv[1]);
+            fclose(fileBarrios);
+        }
         return 1;
     }
 
@@ -43,15 +50,10 @@ int main(int argc, char *argv[]) {
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
-        char * nombre = malloc(strlen(token)+1);
-        if (nombre == NULL){
-            fprintf(stderr, "There's not enough memory available for allocation");
-            return 1;
-        }
-        strcpy(nombre,token);
+        char * barrio = token;
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
-        addBarrio(barrios, nombre, habitantes);
+        addBarrio(barrios, barrio, habitantes);
     }
 
     //Leo archivo de arboles
@@ -60,33 +62,20 @@ int main(int argc, char *argv[]) {
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
         char * barrio;
-        char * nombre;
+        char * especie;
         int index = 0;
         int diametro;
         for (token = strtok (line, ";"); token != NULL; token = strtok (NULL, ";"))
         {
-            if (index == 2){
-                barrio = malloc(strlen(token)+1);
-                if (barrio == NULL){
-                    fprintf(stderr, "There's not enough memory available for allocation");
-                    return 1;
-                }
-                strcpy(barrio, token);
-            }
-            else if (index == 7){
-                nombre = malloc(strlen(token)+1);
-                if (nombre == NULL){
-                    fprintf(stderr, "There's not enough memory available for allocation");
-                    return 1;
-                }
-                strcpy(nombre, token);
-            }
-            else if (index == 11){
+            if (index == BARRIO)
+                barrio = token;
+            else if (index == ESPECIE)
+                especie = token;
+            else if (index == DIAMETRO)
                 diametro = atoi(token);
-            }
             index++;
         }
-        addArbol(arboles, nombre, diametro);
+        addArbol(arboles, especie, diametro);
         incArbolBarrio(barrios, barrio);
      }
 
@@ -104,6 +93,7 @@ int main(int argc, char *argv[]) {
         cant_arboles[i].nombre_auxiliar =  nombreBarrio(barrios, i);
         cant_arboles[i].valor_auxiliar = cantArb(barrios, i);
     }
+    
     qsort(cant_arboles, sizeBarrio(barrios), sizeof(AuxStruct), sortCantArboles);
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         fprintf(q1, "%s;%.f\n", cant_arboles[i].nombre_auxiliar, cant_arboles[i].valor_auxiliar);
