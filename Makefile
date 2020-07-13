@@ -1,15 +1,17 @@
 #Makefile para BUE y VAN
 
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lm -ldl
+CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lm 
 
 all: arbolesBUEADT arbolesVANADT
 
 arbolesBUEADT: mainBUE.c arbolesADT.c barriosADT.c
-	$(CC) -o arbolesBUEADT mainBUE.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -c main.c arbolesADT.c barriosADT.c $(CFLAGS) -D BARRIO=2 -D ESPECIE=7 -D DIAMETRO=11
+	$(CC) -o arbolesBUEADT main.c arbolesADT.c barriosADT.c $(CFLAGS) -D BARRIO=2 -D ESPECIE=7 -D DIAMETRO=11
 
 arbolesVANADT: mainVAN.c arbolesADT.c barriosADT.c
-	$(CC) -o arbolesVANADT mainVAN.c arbolesADT.c barriosADT.c $(CFLAGS)
+	$(CC) -c main.c arbolesADT.c barriosADT.c $(CFLAGS) -D BARRIO=12 -D ESPECIE=6 -D DIAMETRO=15
+	$(CC) -o arbolesVANADT main.c arbolesADT.c barriosADT.c $(CFLAGS) -D BARRIO=12 -D ESPECIE=6 -D DIAMETRO=15
 
 
 
