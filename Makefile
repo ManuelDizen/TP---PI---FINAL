@@ -1,7 +1,7 @@
 #Makefile para BUE y VAN
 
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lm -ldl
+CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lasan -lm -ldl
 
 all: arbolesBUEADT arbolesVANADT
 
