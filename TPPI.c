@@ -60,6 +60,9 @@ int main(int argc, char *argv[]) {
         int ok = addBarrio(barrios, barrio, habitantes);
         if (ok == 1){
             fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            fclose(fileArboles);
+            fclose(fileBarrios);
+            freeBarrios(barrios);
             return 1;
         }
         else if (ok == -1)
@@ -91,6 +94,10 @@ int main(int argc, char *argv[]) {
         int ok = addArbol(arboles, especie, diametro);
         if (ok == 1){
             fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            fclose(fileArboles);
+            fclose(fileBarrios);
+            freeArboles(arboles);
+            freeBarrios(barrios);
             return 1;
         }
         ok = incArbolBarrio(barrios, barrio);
@@ -205,7 +212,7 @@ int sortPromedioDiamArb (const void * aux1,const void * aux2){
         return -1;
     return 1;
 }
-/*Trunca un numero a digits digitos*/
+/*Trunca un numero a digits cifras decimales*/
 double TruncNumber (double num1, int digits){
     int potencia = pow(10, digits);
     int numerador = num1*potencia;
