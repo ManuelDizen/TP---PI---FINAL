@@ -36,6 +36,8 @@ void incArbolBarrio(barriosADT barrios, char * nombre){
         barrios->barrios[index].cant_arboles++;
         barrios->barrios[index].arbol_habitante_promedio = (double)barrios->barrios[index].cant_arboles / barrios->barrios[index].cant_habitantes;
     }
+    else
+        fprintf(stderr, "Could not find %s.\n", nombre);
 }
 
 void addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
