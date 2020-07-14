@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "No hay memoria suficiente para asignar.\n");
             fclose(fileArboles);
             fclose(fileBarrios);
-            freeArboles(arboles);
             freeBarrios(barrios);
             return 1;
         }
