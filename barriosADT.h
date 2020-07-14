@@ -10,10 +10,10 @@ typedef struct barriosCDT * barriosADT;
 barriosADT nuevoBarrio(void);
 
 /*Agrega un barrio*/
-void addBarrio (barriosADT barrios, char * nombre, long int cant_hab);
+int addBarrio (barriosADT barrios, char * nombre, long int cant_hab);
 
 /*Agrega un arbol al barrio correspondiente*/
-void incArbolBarrio(barriosADT barrios, char * nombre);
+int incArbolBarrio(barriosADT barrios, char * nombre);
 
 /*Devuelve la cantidad de barrios*/
 size_t sizeBarrio (barriosADT barrios);
