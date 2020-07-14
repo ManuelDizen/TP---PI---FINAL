@@ -39,14 +39,12 @@ int addArbol (arbolesADT arboles, char * nombre, long int diametro){
     errno = 0;
     arboles->arboles = realloc(arboles->arboles, (arboles->sizeArboles +1)*sizeof(TArboles));
     if (errno == ENOMEM){
-        fprintf(stderr, "There's not enough memory available for allocation");
         return 1;
     }
     arboles->arboles[arboles->sizeArboles].cantidad_arboles = 1;
     arboles->arboles[arboles->sizeArboles].diametro_total = arboles->arboles[arboles->sizeArboles].diametro_promedio = diametro;
     arboles->arboles[arboles->sizeArboles].nombre = malloc(strlen(nombre)+1);
     if (errno == ENOMEM){
-        fprintf(stderr, "There's not enough memory available for allocation");
         return 1;
     }
     strcpy(arboles->arboles[arboles->sizeArboles].nombre, nombre);
