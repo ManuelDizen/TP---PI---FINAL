@@ -1,4 +1,4 @@
-#Makefile como ejemplo con BUE
+#Makefile para BUE y VAN
 
 objects = TPPI.o barriosADT.o arbolesADT.o
 CC = gcc
