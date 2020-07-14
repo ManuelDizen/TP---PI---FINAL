@@ -57,7 +57,13 @@ int main(int argc, char *argv[]) {
         char * barrio = token;
         token = strtok (NULL, "\n");
         int habitantes = atoi(token);
-        addBarrio(barrios, barrio, habitantes);
+        int ok = addBarrio(barrios, barrio, habitantes);
+        if (ok == 1){
+            fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            return 1;
+        }
+        else if (ok == -1)
+            fprintf(stderr, "Ya existe el barrio %s.\n", barrio);
     }
 
     /*Se lee archivo de arboles*/
@@ -82,8 +88,14 @@ int main(int argc, char *argv[]) {
                 diametro = atoi(token);
             index++;
         }
-        addArbol(arboles, especie, diametro);
-        incArbolBarrio(barrios, barrio);
+        int ok = addArbol(arboles, especie, diametro);
+        if (ok == 1){
+            fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            return 1;
+        }
+        ok = incArbolBarrio(barrios, barrio);
+        if (ok == 1)
+            fprintf(stderr, "No se pudo encontrar el barrio %s.\n", barrio);
      }
 
 
