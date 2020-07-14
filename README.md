@@ -18,7 +18,6 @@ Si no se encuentra alguno de estos archivos, no será posible la compilación ni
 2- Insertar el comando
   $ make
  Este comando compila el programa y crea un archivo ejecutable y los código objeto (.o) de los código fuente (.c) antes listados.
-NOTA: El makefile está diseñado para generar 2 archivos ejecutables, uno para Vancouver y otro para Buenos Aires. Si se quisiera utilizar para otra ciudad con un .csv con formato diferente, se debe actualizar el nombre con el que se creará el archivo ejecutable y los -D de BARRIO, ESPECIE y DIAMETRO con el número de columna en donde se encuentran estos datos en el nuevo archivo (siendo la primer columna la número 0).
 
 3- 
   a) Si se desea ejecutar el programa para Buenos Aires, ingresar el comando
@@ -33,6 +32,4 @@ Si no se respeta el orden, el programa no funcionará correctamente. Si se inser
 4- Insertar el comando
   $ make clean
 Este comando elimina los código objeto generados en el punto 2. 
-
-
 

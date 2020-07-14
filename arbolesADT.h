@@ -1,9 +1,6 @@
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> Pampero
 #ifndef arbolesADT_h
 #define arbolesADT_h
 
@@ -11,13 +8,6 @@
 
 typedef struct arbolesCDT * arbolesADT;
 
-<<<<<<< HEAD
-arbolesADT nuevoArbol(void);
-void addArbol (arbolesADT arboles, char * nombre, long int diametro);
-size_t sizeArboles (arbolesADT arboles);
-char * nombreArbol (arbolesADT arboles, size_t index);
-double promedioDiam (arbolesADT arboles, size_t index);
-=======
 /*Crea un nuevo conjunto de arboles*/
 arbolesADT nuevoArbol(void);
 
@@ -34,7 +24,6 @@ char * nombreArbol (arbolesADT arboles, size_t index);
 double promedioDiam (arbolesADT arboles, size_t index);
 
 /*Libera la memoria reservada por el conjunto de arboles*/
->>>>>>> Pampero
 void freeArboles(arbolesADT arboles);
 
 
