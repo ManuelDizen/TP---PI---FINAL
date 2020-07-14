@@ -27,6 +27,7 @@ void freeArboles(arbolesADT arboles){
     free(arboles);
 }
 
+/*Busca el arbol. Si existe, actualiza sus parametros. Si no, lo crea*/
 int addArbol (arbolesADT arboles, char * nombre, long int diametro){
     for (int i = 0; i < arboles->sizeArboles; i++){
         if (strcmp(arboles->arboles[i].nombre, nombre) == 0){
