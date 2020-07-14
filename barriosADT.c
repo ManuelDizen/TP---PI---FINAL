@@ -58,7 +58,7 @@ int addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
         }
         strcpy(barrios->barrios[barrios->sizeBarrios].nombre, nombre);
         barrios->sizeBarrios++;
-        return 1;
+        return 0;
     }
     return -1;
 }
