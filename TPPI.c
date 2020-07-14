@@ -25,7 +25,8 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "Invalid number of arguments\n");
       return 1;
     }
- 
+    
+    /*Se abren ambos csv, arboles y barrios*/
     FILE * fileArboles = fopen(argv[1], "r");
     FILE * fileBarrios = fopen(argv[2], "r");
     FILE *q1, *q2, *q3;
@@ -42,10 +43,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-   barriosADT barrios = nuevoBarrio();
-    //Leo archivo de barrios
+    barriosADT barrios = nuevoBarrio();
+    
+    /*Se lee archivo de barrios*/
     char line[MAX_LEN];
     fgets(line, MAX_LEN, fileBarrios); //evito la primer linea de encabezado
+    
+    /*Hasta que se termine el archivo, se guarda el nombre primero, y la cantidad de habitantes despues,
+    agregandolo a la lista, siguiendo el formato del archivo*/
     while(fgets(line, MAX_LEN, fileBarrios)!=NULL){
         char * token;
         token = strtok (line, ";");
@@ -55,9 +60,12 @@ int main(int argc, char *argv[]) {
         addBarrio(barrios, barrio, habitantes);
     }
 
-    //Leo archivo de arboles
+    /*Se lee archivo de arboles*/
     arbolesADT arboles = nuevoArbol();
-    fgets(line, MAX_LEN, fileArboles); //evito leer la primer linea de encabezado
+    fgets(line, MAX_LEN, fileArboles); //Se evita leer la primer linea de encabezado
+    
+    /*Hasta que se termine el archivo, se guardan el barrio, la especie, y el diametro de cada arbol
+    siguiendo el formato del archivo*/
     while(fgets(line, MAX_LEN, fileArboles)!=NULL){
         char * token;
         char * barrio;
@@ -79,42 +87,56 @@ int main(int argc, char *argv[]) {
      }
 
 
-    //Abro archivos de query para escribirlos
+    /*Se generan los archivos que serán los queries*/
     q1 = fopen("query1.csv", "wt");
     fprintf(q1, "BARRIO;ARBOLES\n");
     q2 = fopen("query2.csv", "wt");
     fprintf(q2, "BARRIO;ARBOLES_POR_HABITANTE\n");
     q3 = fopen("query3.csv", "wt");
     fprintf(q3, "NOMBRE_CIENTIFICO;PROMEDIO_DIAMETRO\n");
-
+    
+    /*Se copian los barrios a usar a un vector auxiliar de tipo AuxStruct*/
     AuxStruct cant_arboles[sizeBarrio(barrios)];
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         cant_arboles[i].nombre_auxiliar =  nombreBarrio(barrios, i);
         cant_arboles[i].valor_auxiliar = cantArb(barrios, i);
     }
     
+    /*Se ordena el vector de acuerdo a la funcion criterio sortCantArboles*/
     qsort(cant_arboles, sizeBarrio(barrios), sizeof(AuxStruct), sortCantArboles);
+    
+    /*Se copia al query 1 los valores del vector auxiliar ordenado*/
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         fprintf(q1, "%s;%.f\n", cant_arboles[i].nombre_auxiliar, cant_arboles[i].valor_auxiliar);
     }
-
+    
+    /*Se reutiliza el vector para el 2do query*/
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         cant_arboles[i].nombre_auxiliar = nombreBarrio(barrios, i);
         cant_arboles[i].valor_auxiliar = TruncNumber(promedioArbHab(barrios, i), DECIMAL);
     }
-
+    
+    /*Se ordena el vector de acuerdo a la funcion criterio sortPromedioArbHab*/
     qsort(cant_arboles, sizeBarrio(barrios), sizeof(AuxStruct), sortPromedioArbHab);
+    
+    /*Se copian los valores del vector auxiliar ordenado al query 2*/
     for (size_t i = 0; i < sizeBarrio(barrios); i++){
         fprintf(q2, "%s;%.2f\n", cant_arboles[i].nombre_auxiliar, cant_arboles[i].valor_auxiliar);
     }
     
+    /*Se crea un nuevo vector auxiliar, también de tipo auxStruct*/
     AuxStruct diametroArbol[sizeArboles(arboles)];
+    
+    /*Se copian los arboles a ordenar a el vector auxiliar*/
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         diametroArbol[i].nombre_auxiliar = nombreArbol(arboles, i);
         diametroArbol[i].valor_auxiliar = TruncNumber(promedioDiam(arboles, i), DECIMAL);
     }
     
+    /*Ordena el vector auxiliar diametroArbol de acuerdo a la funcion auxiliar sortPromedioDiamArb*/
     qsort(diametroArbol, sizeArboles(arboles), sizeof(AuxStruct), sortPromedioDiamArb);
+    
+    /*Copia los valores del vector auxiliar al query 3*/
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         fprintf(q3, "%s;%.2f\n", diametroArbol[i].nombre_auxiliar, diametroArbol[i].valor_auxiliar);
     }
@@ -128,6 +150,8 @@ int main(int argc, char *argv[]) {
     freeBarrios(barrios);
 }
 
+/*Devuelve el elemento que tenga mayor cantidad
+de arboles, o si son iguales, el menor alfabeticamente*/
 int sortCantArboles (const void * aux1, const void * aux2){
     AuxStruct *barrio1 = (AuxStruct *)aux1;
     AuxStruct *barrio2 = (AuxStruct *)aux2;
@@ -141,6 +165,8 @@ int sortCantArboles (const void * aux1, const void * aux2){
     return 1;
 }
 
+/*Devuelve el elemento que tenga mayor promedio de arboles por habitante,
+o si son iguales, el menor alfabeticamente*/
 int sortPromedioArbHab (const void * aux1,const void * aux2){
     AuxStruct *barrio1 = (AuxStruct *)aux1;
     AuxStruct *barrio2 = (AuxStruct *)aux2;
@@ -153,7 +179,8 @@ int sortPromedioArbHab (const void * aux1,const void * aux2){
         return -1;
     return 1;
 }
-
+/*Devuelve el elemento con mayor diametro promedio, o si son iguales, 
+el menor alfabeticamente*/
 int sortPromedioDiamArb (const void * aux1,const void * aux2){
     AuxStruct *arbol1 = (AuxStruct *)aux1;
     AuxStruct *arbol2 = (AuxStruct *)aux2;
@@ -166,7 +193,7 @@ int sortPromedioDiamArb (const void * aux1,const void * aux2){
         return -1;
     return 1;
 }
-
+/*Trunca un numero a digits digitos*/
 double TruncNumber (double num1, int digits){
     int potencia = pow(10, digits);
     int numerador = num1*potencia;
