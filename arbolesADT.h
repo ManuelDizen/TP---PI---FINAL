@@ -12,7 +12,7 @@ typedef struct arbolesCDT * arbolesADT;
 arbolesADT nuevoArbol(void);
 
 /*Agrega un arbol al conjunto*/
-void addArbol (arbolesADT arboles, char * nombre, long int diametro);
+int addArbol (arbolesADT arboles, char * nombre, long int diametro);
 
 /*Devuelve la cantidad de arboles*/
 size_t sizeArboles (arbolesADT arboles);
