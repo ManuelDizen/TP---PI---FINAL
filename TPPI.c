@@ -60,6 +60,9 @@ int main(int argc, char *argv[]) {
         int ok = addBarrio(barrios, barrio, habitantes);
         if (ok == 1){
             fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            fclose(fileBarrios);
+            fclose(fileArboles);
+            freeBarrios(barrios);
             return 1;
         }
         else if (ok == -1)
@@ -91,6 +94,10 @@ int main(int argc, char *argv[]) {
         int ok = addArbol(arboles, especie, diametro);
         if (ok == 1){
             fprintf(stderr, "No hay memoria suficiente para asignar.\n");
+            fclose(fileArboles);
+            fclose(fileBarrios);
+            freeArboles(arboles);
+            freeBarrios(barrios);
             return 1;
         }
         ok = incArbolBarrio(barrios, barrio);
@@ -152,9 +159,9 @@ int main(int argc, char *argv[]) {
     for (size_t i = 0; i < sizeArboles(arboles); i++){
         fprintf(q3, "%s;%.2f\n", diametroArbol[i].nombre_auxiliar, diametroArbol[i].valor_auxiliar);
     }
-
-    fclose(fileArboles);
+    
     fclose(fileBarrios);
+    fclose(fileArboles);
     fclose(q1);
     fclose(q2);
     fclose(q3);
