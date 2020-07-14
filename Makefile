@@ -1,5 +1,6 @@
 #Makefile como ejemplo con BUE
 
+objects = TPPI.o barriosADT.o arbolesADT.o
 CC = gcc
 CFLAGS = -Wall -pedantic -std=c99 -fsanitize=address -lm 
 
@@ -12,6 +13,9 @@ arbolesBUEADT: TPPI.c arbolesADT.c barriosADT.c
 arbolesVANADT: TPPI.c arbolesADT.c barriosADT.c
 	$(CC) -c TPPI.c arbolesADT.c barriosADT.c $(CFLAGS) -D BARRIO=12 -D ESPECIE=6 -D DIAMETRO=15
 	$(CC) -o arbolesVANADT TPPI.o arbolesADT.o barriosADT.o $(CFLAGS) -D BARRIO=12 -D ESPECIE=6 -D DIAMETRO=15
+
+clean :
+	-rm $(objects)  
 
 
 
