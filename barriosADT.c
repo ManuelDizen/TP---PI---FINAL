@@ -30,35 +30,37 @@ static int findBarrio (TBarrios * barrios, size_t size, char * nombre, int * ind
     return 0;
 }
 
-void incArbolBarrio(barriosADT barrios, char * nombre){
+int incArbolBarrio(barriosADT barrios, char * nombre){
     int index;
     if (findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index)){
         barrios->barrios[index].cant_arboles++;
         barrios->barrios[index].arbol_habitante_promedio = (double)barrios->barrios[index].cant_arboles / barrios->barrios[index].cant_habitantes;
+        return 0;
     }
     else
-        fprintf(stderr, "Could not find %s.\n", nombre);
+        return 1;
+        
 }
 
-void addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
+int addBarrio (barriosADT barrios, char * nombre, long int cant_hab){
     int index;
     errno = 0;
     if (!findBarrio(barrios->barrios, barrios->sizeBarrios, nombre, &index)){
         barrios->barrios = realloc(barrios->barrios, (barrios->sizeBarrios +1)*sizeof(TBarrios));
         if (errno == ENOMEM){
-            fprintf(stderr, "There's not enough memory available for allocation");
-            return;
+            return 1;
         }
         barrios->barrios[barrios->sizeBarrios].cant_habitantes = cant_hab;
         barrios->barrios[barrios->sizeBarrios].cant_arboles = barrios->barrios[barrios->sizeBarrios].arbol_habitante_promedio = 0;
         barrios->barrios[barrios->sizeBarrios].nombre = malloc(strlen(nombre)+1);
         if (errno == ENOMEM){
-            fprintf(stderr, "There's not enough memory available for allocation");
-            return;
+            return 1;
         }
         strcpy(barrios->barrios[barrios->sizeBarrios].nombre, nombre);
         barrios->sizeBarrios++;
+        return 1;
     }
+    return -1;
 }
 
 void freeBarrios(barriosADT barrios){
