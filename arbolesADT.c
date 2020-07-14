@@ -16,12 +16,12 @@ typedef struct arbolesCDT{
     size_t sizeArboles;
 } arbolesCDT;
 
-/*Crea un nuevo conjunto de arboles*/
+//Crea un nuevo conjunto de arboles
 arbolesADT nuevoArbol(void){
     return calloc(1, sizeof(arbolesCDT));
 }
 
-/*Libera la memoria utilizada*/
+//Libera la memoria utilizada
 void freeArboles(arbolesADT arboles){
     for (int i = 0; i < sizeArboles(arboles); i++)
         free(arboles->arboles[i].nombre);
@@ -29,7 +29,7 @@ void freeArboles(arbolesADT arboles){
     free(arboles);
 }
 
-/*Busca el arbol. Si existe, actualiza sus parametros. Si no, lo crea*/
+//Busca el arbol. Si existe, actualiza sus parametros. Si no, lo crea. Retorna 0 si no hubo errores o 1 si no hay memoria suficiente
 int addArbol (arbolesADT arboles, char * nombre, long int diametro){
     for (int i = 0; i < arboles->sizeArboles; i++){
         if (strcmp(arboles->arboles[i].nombre, nombre) == 0){
@@ -41,6 +41,7 @@ int addArbol (arbolesADT arboles, char * nombre, long int diametro){
     }
     errno = 0;
     arboles->arboles = realloc(arboles->arboles, (arboles->sizeArboles +1)*sizeof(TArboles));
+    //Si no hay memoria suficiente, retorna 1 y deja que el frontend decida si quiere seguir la ejecución o no
     if (errno == ENOMEM){
         return 1;
     }
@@ -55,17 +56,17 @@ int addArbol (arbolesADT arboles, char * nombre, long int diametro){
     return 0;
 }
 
-/*Devuelve la cantidad de arboles distintos*/
+//Devuelve la cantidad de arboles distintos
 size_t sizeArboles (arbolesADT arboles){
     return arboles->sizeArboles;
 }
 
-/*Devuelve le nombre de el arbol en la posicion index*/
+//Devuelve el nombre de el arbol en la posicion index
 char * nombreArbol (arbolesADT arboles, size_t index){
     return arboles->arboles[index].nombre;
 }
 
-/*Devuelve el promedio diametro del arbol ubicado en la posicion index*/
+//Devuelve el promedio diametro del arbol ubicado en la posicion index
 double promedioDiam (arbolesADT arboles, size_t index){
     return arboles->arboles[index].diametro_promedio;
 }
